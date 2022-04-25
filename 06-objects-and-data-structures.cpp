@@ -72,6 +72,7 @@ struct CircleDS {
 };
 //	'Geometry' provides the implementation
 struct GeometryDS {
+	//	must implement 'area' for each supported type
 	double area(unique_ptr<SquareDS> shape);
 	double area(unique_ptr<RectangleDS> shape);
 	double area(unique_ptr<CircleDS> shape);
@@ -91,24 +92,37 @@ public:
 		x = init.begin()[0];
 		y = init.begin()[1];
 	}
+	//	Ongoing: 2022-04-26T01:16:20AEST copy-ctor can access private variables? <- we are dealing with the same class
+	//PointOO(PointOO& p)
+	//	: x(p.x), y(p.y) {}
+	PointOO(PointOO&) = default;
 };
 class SquareOO {
-	unique_ptr<PointOO> topLeft;
+	//unique_ptr<PointOO> topLeft;
+	PointOO topLeft;
 	double side;
 public:
 	double area() { return side * side; }
 };
 class RectangleOO {
-	unique_ptr<PointOO> topLeft;
-	double length;
-	double width;
+	//unique_ptr<PointOO> topLeft;
+	PointOO topLeft;
+	double length, width;
 public:
 	double area() { return length * width; }
 };
 class CircleOO {
-	unique_ptr<PointOO> center;
+	//unique_ptr<PointOO> center;
+	PointOO center;
 	double r;
 public:
+	//	Ongoing: 2022-04-26T01:13:56AEST (what is best used here (as type of first argument)), 'PointOO' or 'initializer_list<double>'? (from a better-practice viewpoint), (the former necesitates a copy-ctor for PointOO (the default one is a trivial solution))
+	//CircleOO(PointOO c, double R)
+	//	: center(new PointOO(c)), r(R) {}
+	CircleOO(PointOO c, double R) 
+		: center(c), r(R) {}
+	//	Ongoing: 2022-04-26T01:22:38AEST (another) reason not to use smartpointers for member variables -> (so we can use) default copy ctor
+	CircleOO(CircleOO&) = default;
 	double area() { return 2 * 3.14159 * r; }
 };
 //	{{{
@@ -117,11 +131,14 @@ public:
 //	}}}
 //	Parameterized type is used, allows use with any type supporting 'area()' (check is at compile type) [...] (but, using a template class prevents us from creating a single object instance to which any type can be passed (defeating the point))
 struct GeometryOO {
+	//	Ongoing: 2022-04-26T01:25:38AEST necessary(?) to provide both 'T shape' and 'T* shape'
 	//	note: use of template member functions (not a template class)
 	template<class T>
-	double area(T* shape) { return shape->area(); }
+	double area(T shape) { return shape.area(); }
 	template<class T>
-	double area_ii(unique_ptr<T> shape) { return shape->area(); }
+	double area(T* shape) { return shape->area(); }
+	//template<class T>
+	//double area_ii(unique_ptr<T> shape) { return shape->area(); }
 	//	we cannot add 'perimeter()' without first implementing it for each shape class
 };
 //	{{{
@@ -217,13 +234,14 @@ struct GeometryOO_ii {
 
 int main()
 {
-	CircleOO c1;
-	unique_ptr<CircleOO> pc1( new CircleOO() );
+	//CircleOO c1;
+	//unique_ptr<CircleOO> pc1( new CircleOO() );
 
-	//	Ongoing: 2022-04-24T02:34:57AEST (oh no), (being a place to leave things) -> usage of 'GeometryOO<>::area()'? -> this 
+	PointOO poo1( {1,2} );
+	CircleOO coo2( {1,2}, 3 );
 
-	//GeometryOO g1;
-	//g1.area(c1);
+	GeometryOO g1;
+	cout << "g1.area(coo2)=(" << g1.area(coo2) << ")\n";
 
 	return 0;
 }
