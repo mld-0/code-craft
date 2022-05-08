@@ -7,12 +7,18 @@
 #include <string>
 using namespace std;
 //	{{{2
+constexpr double pi = 3.141592653589793238463;
+//	Ongoings:
+//	{{{
+//	Ongoing: 2022-04-26T00:59:16AEST 'PointOO' best way to only accept initalizer list that must be 2 elements (presumedly <meaning/that-being>, how to reject anything else at compile time?)
+//	}}}
 
 //	TODO: 2022-04-26T01:01:58AEST clean-code, 06-objects-and-data-structures, (actually implement 'shape' examples (since as we do so, we discover the problem slightly more than trivial), continue with other topics from chapter
+//	TODO: 2022-04-26T00:53:45AEST 'CircleOO_ii, (what is better practice), taking (double, double, double) or (Point, double)? (and it would be best if one could pass '{double,double}, double'
 
-//	Avoid blithely adding set/get/is methods. <(Seek to maximize encapsulation (where else (in effective-c++?) did 'encapsulation' come up?))>
+//	Hiding implementation is about abstractions, offering abstract interfaces that allow manipulation of the essence of the data. 
 
-//	Data Abstraction: Concrete vs Abstract Point
+//	Example: Data Abstraction, Concrete vs Abstract Point
 class PointConcrete {
 public:
 	//	implementation details are exposed to the world
@@ -21,7 +27,7 @@ public:
 };
 class PointAbstract {
 public:
-	//	enforces access policy: coordinates can be read indervidually, but can only be set together
+	//	methods enforces access policy: coordinates can be read indervidually, but can only be set together
 	double getX();
 	double getY();
 	void setCartesian(double x, double y);
@@ -33,7 +39,7 @@ private:
 };
 
 
-//	Hiding implementation is about abstractions. It exposes abstract interfaces that allow manipulation of the (essence of the) data. 
+//	Example: This second form exposes a more abstract form of our data. Where it is sufficent, it should be preferable.
 class VehicleConcrete {
 public:
 	double getFuelTankCapacityInGallons();
@@ -43,93 +49,92 @@ class VehicleAbstract {
 public:
 	double getPercentFuelRemaining();
 };
-//	The second form exposes a more abstract form of our data. Where it is sufficent, it should be preferable.
-
-
+//	Avoid blithely adding set/get/is methods, instead seek to maximize encapsulation.
+//	Encapsualation: <?>
 
 
 //	Data/Object anti-symmetry
 //	Objects hide their data behind abstractions, and expose functions that operate on that data.
-//	Data-structures expose their data and have no meaningful functions.
+//	Data-structures expose their data and have no meaningful functions, <leading to> procedural <code/implementations>
+//	The implications:
+//	Procedural code makes it easy to add new functions without changing existing data-structures.
+//	OO code makes it easy to add new classes without changing existing functions.
+//	'Everything-is-an-object' is a myth. Sometimes, the best choice is simple data structures operated on by procedures.
 
-//	Data Structure (Procedural)
+
+//	Data-Structure (Procedural)
+//	Ongoing: 2022-05-08T20:33:32AEST no need to have 'SquareDS', 'RectangleDS' derived from 'ShapeDS'(?)
 struct PointDS {
 	//	Ongoing: 2022-04-26T01:04:38AEST is <this> multiple-variable declaration not bad (and what is it called?)
 	double x, y;
 };
 struct SquareDS {
-	unique_ptr<PointDS> topLeft;
+	PointDS topLeft;
 	double side;
 };
 struct RectangleDS {
-	unique_ptr<PointDS> topLeft;
+	PointDS topLeft;
 	double height;
 	double width;
 };
 struct CircleDS {
-	unique_ptr<PointDS> centre;
+	PointDS center;
 	double r;
 };
-//	'Geometry' provides the implementation
+//	<(procedural-class)> 'Geometry' provides the implementation
 struct GeometryDS {
 	//	must implement 'area' for each supported type
-	double area(unique_ptr<SquareDS> shape);
-	double area(unique_ptr<RectangleDS> shape);
-	double area(unique_ptr<CircleDS> shape);
-	//	Later addition of 'perimeter()' is possible without having to change Shape classes
+	double area(const SquareDS& shape) { return shape.side * shape.side; }
+	double area(const RectangleDS& shape) { return shape.height * shape.width; }
+	double area(const CircleDS& shape) { return 2 * pi * shape.r; }
+	//	Later addition of 'perimeter()' is possible without having to change indervidual Shape classes
 };
 
 
+//	Object-oriented implementation
 class PointOO {
 	double x;
 	double y;
 public:
-	PointOO(double X, double Y) 
-		: x(X), y(Y) {}
-	//	Ongoing: 2022-04-26T00:59:16AEST best way to only accept initalizer list that must be 2 elements (presumedly <meaning/that-being>, how to reject anything else at compile time?)
+	PointOO(double X, double Y) : x(X), y(Y) {}
 	PointOO(initializer_list<double> init) {
 		if (init.size() != 2) { throw invalid_argument("PointOO initializer_list must have size 2"); }
 		x = init.begin()[0];
 		y = init.begin()[1];
 	}
-	//	Ongoing: 2022-04-26T01:16:20AEST copy-ctor can access private variables? <- we are dealing with the same class
-	//PointOO(PointOO& p)
-	//	: x(p.x), y(p.y) {}
 	PointOO(PointOO&) = default;
 };
 class SquareOO {
-	//unique_ptr<PointOO> topLeft;
 	PointOO topLeft;
 	double side;
 public:
+	SquareOO(PointOO tl, double s) : topLeft(tl), side(s) {}
 	double area() { return side * side; }
 };
 class RectangleOO {
-	//unique_ptr<PointOO> topLeft;
 	PointOO topLeft;
 	double length, width;
 public:
+	RectangleOO(PointOO tl, double l, double w) : topLeft(tl), length(l), width(w) {}
 	double area() { return length * width; }
 };
 class CircleOO {
-	//unique_ptr<PointOO> center;
 	PointOO center;
 	double r;
 public:
+	//	{{{
 	//	Ongoing: 2022-04-26T01:13:56AEST (what is best used here (as type of first argument)), 'PointOO' or 'initializer_list<double>'? (from a better-practice viewpoint), (the former necesitates a copy-ctor for PointOO (the default one is a trivial solution))
-	//CircleOO(PointOO c, double R)
-	//	: center(new PointOO(c)), r(R) {}
-	CircleOO(PointOO c, double R) 
-		: center(c), r(R) {}
 	//	Ongoing: 2022-04-26T01:22:38AEST (another) reason not to use smartpointers for member variables -> (so we can use) default copy ctor
+	//	}}}
+	CircleOO(PointOO c, double R) : center(c), r(R) {}
 	CircleOO(CircleOO&) = default;
-	double area() { return 2 * 3.14159 * r; }
+	double area() { return 2 * pi * r; }
 };
 //	{{{
 //	Ongoing: 2022-04-24T23:26:04AEST here we use <(template instantiation?)> (a compile time check) to ensure all types used with 'GeometryOO::area()' (support the interface) (which is defined by (how we use said type))
 //	Ongoing: 2022-04-24T23:24:22AEST type deduction rules, vis-a-vis template classes vs template member functions
 //	}}}
-//	Parameterized type is used, allows use with any type supporting 'area()' (check is at compile type) [...] (but, using a template class prevents us from creating a single object instance to which any type can be passed (defeating the point))
+//	Parameterized type is used, allows use with any type supporting 'area()' (check is at compile type) [...] (but, using a template class prevents us from creating a single object instance to which any type can be passed (defeating the point)) <(what about using inheritance instead?)>
 struct GeometryOO {
 	//	Ongoing: 2022-04-26T01:25:38AEST necessary(?) to provide both 'T shape' and 'T* shape'
 	//	note: use of template member functions (not a template class)
@@ -137,11 +142,11 @@ struct GeometryOO {
 	double area(T shape) { return shape.area(); }
 	template<class T>
 	double area(T* shape) { return shape->area(); }
-	//template<class T>
-	//double area_ii(unique_ptr<T> shape) { return shape->area(); }
 	//	we cannot add 'perimeter()' without first implementing it for each shape class
 };
 //	{{{
+//	Ongoing: 2022-05-08T20:53:11AEST does 'polymorphic' describe use of template functions (or does it <imply/require> inheritance/virtual-functions)?
+//	Ongoing: 2022-05-08T20:40:39AEST C++, best practices, using templates for 'GeometryOO' (vs using inheritance/virtual-functions)?
 //	Ongoing: 2022-04-24T23:29:58AEST Sort of defeats the point does it not? (use of template class results in an instance that can only be used for one of our shape types) (and having to move a unique pointer (and then the *nightmare* of having to return it again) (atomic that?))
 //GeometryOO<typeof(c1)> g2;
 //g2.area(pc1);
@@ -150,9 +155,13 @@ struct GeometryOO {
 //	}}}
 
 
+//	Law of Demeter:
 
-//	Ongoing: 2022-04-24T23:31:17AEST topics/questions raised within: (presumedly the correct way to pass a smart pointer is using the underlying raw pointer?) (the point of a smart pointer is ownership?) (virtual-functions/polymorphism and smart pointers?)
+
+
+//	OO_i, OO_ii examples (?):
 //	{{{
+//	Ongoing: 2022-04-24T23:31:17AEST topics/questions raised within: (presumedly the correct way to pass a smart pointer is using the underlying raw pointer?) (the point of a smart pointer is ownership?) (virtual-functions/polymorphism and smart pointers?)
 //	Ongoing: 2022-04-26T01:07:45AEST does [Shape]OO_i example offer anything (that is, is it worth implementing?)
 //	Moar ramblings: extract the better-practice example
 //	Ongoing: 2022-04-24T01:29:44AEST Whether (and once deciding it is), and why inheritance is necessary? [...] we don't have to, but we cannot add new classes later (throwing away an advantage of this method) without manually expanding 'Geometry', throwing away any advantage) [...] (the question: neccessary (seemingly no), preferable(?)) <- this question asked another way(?) do we want to shift work to run-time? [...] Does Effective-C++ have anything to say on when/whether to use virtual functions?
@@ -182,14 +191,15 @@ struct GeometryOO_i {
 	double area_ii(unique_ptr<T> shape) { return shape->area(); }
 	//	we cannot add 'perimeter()' without first implementing it in each shape class
 };
-//	Ongoing: 2022-04-24T01:38:51AEST (is it?) preferable to declare virtual functions in derived class 'virtual' (is there not an effective-c++ lessson about this?) [...] '12-declare-overriding-funcs-override' [...] -> Only virtual member functions can be marked 'override' -> <and when it is, it must be implemented?> [...] -> 'override' forces one to include 'virtual' (and could that be half the point?)
-//	<(and now doing it the other way)>
+//	{{{
+//	Ongoing: 2022-04-24T01:38:51AEST (is it?) preferable to declare virtual functions in derived class 'virtual' (is there not an effective-c++ lessson about this?) [...] '12-declare-overriding-funcs-override' [...] -> Only virtual member functions can be marked 'override' -> <and when it is, it must be implemented?> [...] -> 'override' forces one to include 'virtual' (and could that be half the point?) <(and now doing it the other way)>
 //	Ongoing: 2022-04-24T01:43:55AEST Is it (ever) acceptable to derive a class/struct, without explicitly specifying 'public/private' inheritance, (never-mind/especially-because the f---- of mixing class/struct pairs)?
 //	Ongoing: 2022-04-24T01:45:10AEST public/private inheritance models -> (can you say?) is-a vs has-a (no -> that would be public inheritance vs containing-an-instance-of, or actually yes -> both those things are the latter -> would containing-an-instance-of be the preferable of the two?)
-//	Can't create instances of an Abstract Base Class (which is (exactly)?)
 //	Ongoing: 2022-04-24T02:06:58AEST (is it ever acceptable) and/or (does C++ allow one to) specify as an 'interface' (base class with pure virtual functions (or does interface mean more than that (and in what context))), variables instead of methods? 
 //	Ongoing: 2022-04-24T02:13:27AEST (requirements vis-a-vis the <visibility> of virtual/overrided methods?) [...] (and whether said question makes any sense?)
 //	Ongoing: 2022-04-24T02:14:46AEST (consider this) what is the necessity <or possible-purposue> of providing the class 'Geometry' with method 'area' when implementation is provided by the Derived shape classes?
+//	}}}
+//	Can't create instances of an Abstract Base Class (which is (exactly)?)
 struct ShapeOO_ii {
 	virtual ~ShapeOO_ii() = 0;
 	virtual double area() = 0;
@@ -218,7 +228,6 @@ class CircleOO_ii: public ShapeOO_ii {
 	double r;
 public:
 	//	Ongoing: 2022-04-26T01:00:53AEST now way to use 'make_unique' in an initalizer list (would it not be better to do so inside the ctor body) (or just not to f----- use smartpointers in this way in the first place?)
-	//	TODO: 2022-04-26T00:53:45AEST (what is better practice), taking (double, double, double) or (Point, double)? (and it would be best if one could pass '{double,double}, double'
 	CircleOO_ii(PointOO c, double R)
 		: center(new PointOO(c)), r(R) {}
 	virtual double area() override;
