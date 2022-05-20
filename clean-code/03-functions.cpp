@@ -209,13 +209,14 @@ void BreakfastMaker::serve() {
 }
 
 
-//	LINK: https://dzone.com/articles/the-stepdown-rule
-
 //	Rule 4: The Stepdown Rule
 //	Code should read like a top-down narrative, higher levels of abstraction above lower ones.
 //	Or, caller functions should reside above callee functions.
 //	<(Where the lower-level function is used by two/more higher level functions: place it below the last usage)>
 
+
+//	LINK: https://dzone.com/articles/the-stepdown-rule
+//	{{{
 //	Ongoing: 2022-05-20T19:58:07AEST Consider, the stepdown rule and the case of 'keep similar (high-level) functions together' (I say the example is wrong) (see below) [...] (a hybrid approach, keep public functions together?)
 //	bad (supposedly?)
 //			void MakeBreakfast()
@@ -233,6 +234,10 @@ void BreakfastMaker::serve() {
 //			private void cookDinner()
 //			private void serveDinner()
 //			private void cleanup()
+
+
+
+//	}}}
 
 
 //	Rule 5: Descriptive names
@@ -322,6 +327,10 @@ void BreakfastMaker::serve() {
 //	Detail should increase as we move downward, until at the end we find the lowest level methods and details in the source file.
 //	Would you read a newspaper that is just one long story containing a disorganized agglomeration of facts, dates, and names? A newspaper is composed of many articles, and most are very small. Very rarely articles are a full page long. This makes the newspaper usable.
 //	}}}
+
+//	LINK: https://towardsdatascience.com/a-walkthru-for-writing-better-functions-6cb37f2fa58c
+//	LINK: https://towardsdatascience.com/comprehensive-guide-to-writing-python-functions-others-can-use-2fa186c6be71
+//	LINK: https://epirhandbook.com/en/writing-functions-1.html
 
 //	LINK: https://en.wikipedia.org/wiki/SOLID
 //	{{{
