@@ -107,25 +107,27 @@ using namespace std;
 //	<(effective-c++: public inheritance models is-a)>
 //	An abstract class is a class which cannot be instantiated, it is only for creating subclasses.
 
-//	Class Hierachies - Composition:
+//	Class Hierarchies - Composition:
 //	<>
 
 //	Method binding and overriding:
-//	Encode exceptions to a general rule by overriding information inherited from parrent class
+//	Encode exceptions to a general rule by overriding information inherited from parent class
 //	Different objects using different methods to handle the same request is Polymorphism.
 //	<(effective-c++: don't override non-virtual functions)>
 
-//	OO-Summary:
-//		Everything is an object.
-//		Computation is performed by objects sending/recieving messages (requests for action).
+//	OOP-Summary:
+//		Everything is an object. 
+//		Computation is performed by objects sending/receiving messages (requests for action).
 //		A message takes the form of a function call with/without arguments.
 //		Each object has its own memory, which consists of other objects.
 //		Each object is an instance of a class.
 //		<(A class simply represents a grouping of similar objects, such as integers or lists)>
 //		A class defines behaviour (methods) associated with that type of object.
-//		Classes are organized into an inheritance hierachy. 
+//		Classes are organized into an inheritance hierarchy. 
 //		<(Public inheritance models is-a)>.
 //		<(Composition models has-a)>.
+
+
 
 
 int main()
