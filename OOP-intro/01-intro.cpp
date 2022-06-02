@@ -10,6 +10,7 @@ using namespace std;
 //	Ongoing: 2022-05-31T01:08:31AEST seeing the 'hierarchy of class implementation' (pre-perquisite classes for a class) where inheritance is not used (nicely listing them all in one place when using composition rather than inheritance) [...] (and inheritance vs composition (generally) re: said example)
 //	Ongoing: 2022-05-31T01:30:32AEST being pedantic about the use of the word 'object' vs 'class'
 //	Ongoing: 2022-06-02T23:00:26AEST C++, overriding Derived class member variables? [...] (one cannot override variables, declaring a variable of the same name in Derived hides the Base variable)
+//	Ongoing: 2022-06-03T02:28:48AEST what is meant by 'efficent procedure' (is just a little bit to obvious of-a beside-the-point rabbit hole)
 //	}}}
 
 //	Background:
@@ -30,6 +31,7 @@ using namespace std;
 
 //	Example: (switching to a different paradigm leading to a better solution) DNA sequence as a vector of N integers, discover whether any pattern of length M is ever repeated.
 //	{{{
+//	
 //	O(M * N**2):
 //	     DO 10 I = 1, N-M
 //	      DO 10 J = 1, N-M
@@ -38,11 +40,12 @@ using namespace std;
 //	  20  IF X[I+K-1] .NE. X[J+K-1] THEN FOUND = .FALSE.
 //	      IF FOUND THEN ...
 //	10 CONTINUE
-//	}}}
-//	vs
-//	{{{
+//
+//		vs:
+//	
 //	O(M*N*ln(N))
 //		APL, matrix of N rows / M columns, sort by rows, check for duplicate rows
+//	
 //	}}}
 
 //	Church's conjecture: any computation for which there is an efficient procedure can be realized by a Turing Machine
@@ -98,10 +101,6 @@ using namespace std;
 //	All objects are instances of a class. 
 //	All objects of the same class use the same method to respond to similar messages.
 
-//	LINK: https://realpython.com/inheritance-composition-python/
-//	{{{
-//	}}}
-
 //	Class Hierarchies - Inheritance:
 //	Child classes (subclasses) inherit attributes of their parent class(es).
 //	<(effective-c++: public inheritance models is-a)>
@@ -115,6 +114,10 @@ using namespace std;
 //	Different objects using different methods to handle the same request is Polymorphism.
 //	<(effective-c++: don't override non-virtual functions)>
 
+//	LINK: https://realpython.com/inheritance-composition-python/
+//	{{{
+//	}}}
+
 //	OOP-Summary:
 //		Everything is an object. 
 //		Computation is performed by objects sending/receiving messages (requests for action).
@@ -125,7 +128,7 @@ using namespace std;
 //		A class defines behaviour (methods) associated with that type of object.
 //		Classes are organized into an inheritance hierarchy. 
 //		<(Public inheritance models is-a)>.
-//		<(Composition models has-a)>.
+//		<(Composition and private inheritance model has-a)>.
 
 
 
