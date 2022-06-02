@@ -1,7 +1,5 @@
-//	VIM SETTINGS: {{{3
-//	vim: set tabstop=4 modeline modelines=10 foldmethod=marker:
-//	vim: set foldlevel=2 foldcolumn=2:
-//	}}}1
+//	vim: set tabstop=4 modeline modelines=10:
+//	vim: set foldlevel=2 foldcolumn=2 foldmethod=marker:
 #include <iostream>
 #include <vector>
 #include <string>
@@ -10,6 +8,8 @@ using namespace std;
 //	Ongoings:
 //	{{{
 //	Ongoing: 2022-05-31T01:08:31AEST seeing the 'hierarchy of class implementation' (pre-perquisite classes for a class) where inheritance is not used (nicely listing them all in one place when using composition rather than inheritance) [...] (and inheritance vs composition (generally) re: said example)
+//	Ongoing: 2022-05-31T01:30:32AEST being pedantic about the use of the word 'object' vs 'class'
+//	Ongoing: 2022-06-02T23:00:26AEST C++, overriding Derived class member variables? [...] (one cannot override variables, declaring a variable of the same name in Derived hides the Base variable)
 //	}}}
 
 //	Background:
@@ -67,7 +67,7 @@ using namespace std;
 //	OO-programs are structured around a community of objects interacting by making requests.
 //			Agent: an object
 //			Action: initiated through transmission of message to 'agent' (object) responsible for action.
-//			Message: a request for a method, accompanied by additional information needed to carry out request
+//			Message: a method call with accompanying arguments
 //			(Designated) Receiver: accepts responsibility for message, carries out the requested action
 //			Method: responsible for carrying out the requested action
 
@@ -85,12 +85,52 @@ using namespace std;
 
 
 //	Responsibilities:
-//		
+//	(How to) carry out requests is the (solely) the responsibility of the receiver. 
+//			Protocol: the set of responsibilities associated with an object
 
+
+//	Procedural vs OO:
+//	A procedural program often involves running procedures on data-structures.
+//	An OO program involves making requests of objects (data-structures) to perform a service.
+
+
+//	Classes and instances:
+//	All objects are instances of a class. 
+//	All objects of the same class use the same method to respond to similar messages.
+
+//	LINK: https://realpython.com/inheritance-composition-python/
+//	{{{
+//	}}}
+
+//	Class Hierarchies - Inheritance:
+//	Child classes (subclasses) inherit attributes of their parent class(es).
+//	<(effective-c++: public inheritance models is-a)>
+//	An abstract class is a class which cannot be instantiated, it is only for creating subclasses.
+
+//	Class Hierachies - Composition:
+//	<>
+
+//	Method binding and overriding:
+//	Encode exceptions to a general rule by overriding information inherited from parrent class
+//	Different objects using different methods to handle the same request is Polymorphism.
+//	<(effective-c++: don't override non-virtual functions)>
+
+//	OO-Summary:
+//		Everything is an object.
+//		Computation is performed by objects sending/recieving messages (requests for action).
+//		A message takes the form of a function call with/without arguments.
+//		Each object has its own memory, which consists of other objects.
+//		Each object is an instance of a class.
+//		<(A class simply represents a grouping of similar objects, such as integers or lists)>
+//		A class defines behaviour (methods) associated with that type of object.
+//		Classes are organized into an inheritance hierachy. 
+//		<(Public inheritance models is-a)>.
+//		<(Composition models has-a)>.
 
 
 int main()
 {
 	return 0;
 }
+
 
