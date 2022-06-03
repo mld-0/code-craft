@@ -53,11 +53,11 @@ from io import StringIO
 
 #	Rule 3: Single Level of Abstraction per Function
 #	Mixing levels of abstraction in the same function is always confusing. It makes unclear what is an essential concept and what is a detail. When essential concepts and details are mixed in a function, more and more details tend to accumulate in that function.
-
+#   
 #   Don't make me think - keeping exclusively to a higher level of abstraction means not presenting the reader with statements whose purpose they have to decipher themselves - a function call is self documenting, because the function name should describe what the function does.
 def isUserValid(user: 'User') -> bool:
     return isUnique(user) and isValidPassword(user.password) and isValidEmail(user.email) and isAdult(user.dob)
-
+#   
 def makeBreakfast():
     cook()
     #   Bad:
@@ -65,7 +65,7 @@ def makeBreakfast():
     plate_husband.give(fryingPan.getServing(80))
     #   Fixed:
     serve()
-
+#
 #   Example: mixed levels of abstraction
 def MarkdownPost_MixedAbstraction(resource: 'Resource'):
     data = parseResource(resource)
@@ -80,7 +80,7 @@ def urlForResource(resource: 'Resource') -> str:
 
 #	Rule 4: The Stepdown Rule
 #	Caller functions should reside above callee functions - code should read like a top-down narrative, higher levels of abstraction above lower ones. (Where a function is used by multiple caller functions, place it below the last caller). Justification: when reading one function, people are more likely to refer-to its callee functions than to other similar functions.
-
+#
 #   Example: Grouping similar functions vs grouping 
 #       class Bad():
 #			public void MakeBreakfast()
@@ -142,7 +142,7 @@ def urlForResource(resource: 'Resource') -> str:
 #   Exceptions allow error processing code to be separated from logic.
 #   Doing so leads to messy deeply nested structures, since the caller must deal with any error immediately.
 #   Extract bodies of try-catch block into its own function, allowing complete separation of error handling and logic, and preserving Rule 2: 'Do One Thing'.
-
+#
 #   Example: use of error codes vs use of exceptions
 def HandleDeletePage_ErrorCodes(path):
     if deletePage(page) == E_OK:
@@ -243,7 +243,6 @@ def EmployeeFactory(r: 'EmployeeRecord'):
 #   More arguments make a function harder to read, and harder to test.
 #   Output arguments should be avoided. Use return to output data instead.
 #   Rules:
-#   {{{
 #       Naming: verbs and keywords
 #           Monad: function/argument name should form a verb/noun pair
 #                   write(name)
@@ -304,7 +303,6 @@ def EmployeeFactory(r: 'EmployeeRecord'):
 #                   assertFloatEquals(expected, actual, error_allowed)
 #           Very Bad:
 #                   assertEquals(message, expected, actual)
-#   }}}
 
 
 #	Structured Programming:
@@ -414,6 +412,95 @@ class MenuChoiceHandler_ii:
 #print(m2.mainMenu.availableTeams)
 #   }}}
 
+
+#   LINK: https://towardsdatascience.com/12-of-my-favorite-python-practices-for-better-functions-7a21d18cfb38
+#   {{{
+#   1)  Input/Output
+#       Consider what the function does: return or alter something (but not both).
+#       Ask: What is neccessary to get there.
+#       Then write the function, starting by defining those inputs/outputs.
+
+
+#   2)  Extraction
+#       Creating more methods to handle things that one excessively large function is doing.
+#       Functions should be simple, and have short directives. More methods means better code (see below)
+#       Guideline: extract anything that cannot be done in 3 lines
+#       Shorter functions make bugs easier to narrow down
+from numpy import sqrt
+def norm_bad(x: list) -> list:
+    mu = sum(x) / len(x)
+    x2 = [ (i-mu) ** 2 for i in x ]
+    m = sum(x2) / len(x2)
+    std = sqrt(m)
+    return [ (i-mu) / std for i in x ]
+
+def norm_better(x: list) -> list:
+    mu = get_mean(x)
+    std = get_std(x)
+    return [ (i-mu) / std for i in x ]
+def get_std(x: list) -> float:
+    mu = get_mean(x)
+    x2 = [ (i-mu) ** 2 for i in x ]
+    m = get_mean(x2)
+    return sqrt(m)
+def get_mean(x: list) -> float:
+    return sum(x) / len(x)
+
+#   3)  Naming
+#       A name should describe the output of the function.
+#       Ideally, clients should be able to guess what a function is called without even having to check.
+#       Well chosen names eliminate the need for many comments.
+#       Python uses all-lower-case for method names.
+#       <(verbs and keywords: verb describes what the function does/returns, keywords fold arguments into function name)>
+
+#   4)  Avoid Repetition
+#       Repeating something in code is a sign that extraction is needed.
+
+#   5)  Less is Superior
+#       Less code > More code. 
+
+#   6)  Restrict Types
+#       <(But type hints are just that, unless one breaks out 'mypy'?)>
+#       <(The article does not talk about validating the input (which is ugly and violates 'less is superior?))>
+
+
+#   7)  Docstrings
+#       <>
+
+#   8)  Minimize nesting
+#       Nesting is wherever a new level of scope is created.
+#       <(A function should generally not involve more than 2 levels of nesting)>
+#       Nested loops should only be used: 1) for prototyping, 2) where there is no alternative
+
+
+#   9)  Python Decorators
+#       <>
+
+
+#   10) Code your comments
+#       Don't comment bad code - rewrite it.
+#       Many comments can be made unnecessary by using better names.
+#       Do not comment every line of code.
+
+
+#   11) Use Lambdas
+#       Lambdas provide an alternative to declaring a function.
+#       Can be mapped to arrays (a more pythonic method than traditional iteration).
+
+
+#   12) Avoid keyword arguments
+#       (These have their place, and it is not everywhere). Prefer positional arguments.
+
+#   }}}
+
+#   LINK: https://towardsdatascience.com/more-methods-means-better-code-1d3b237f6cf2
+#   {{{
+
+#   }}}
+
+#   LINK: https://towardsdatascience.com/python-clean-code-6-best-practices-to-make-your-python-functions-more-readable-7ea4c6171d60
+#   {{{
+#   }}}
 #	LINK: https://towardsdatascience.com/a-walkthru-for-writing-better-functions-6cb37f2fa58c
 #	{{{
 #	}}}
@@ -438,6 +525,7 @@ class MenuChoiceHandler_ii:
 
 
 #   Summary:
-#       Functions should be short. Then they should be even shorter than that.
+#       Functions should be short. They should be even shorter than that.
+#       <(Anything that cannot be done in 3 lines should be extracted)>
 #       <>
 
