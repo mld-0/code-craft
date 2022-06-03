@@ -21,6 +21,8 @@ from io import StringIO
 #   Ongoing: 2022-05-30T23:28:25AEST Stepdown rule (example) - really best not to group public methods?
 #   Ongoing: 2022-05-30T23:33:03AEST The stepdown rule (when to ignore it?)
 #   Ongoing: 2022-05-30T23:41:46AEST is a function too long (rule 1): questions to ask to answer this question(?)
+#   Ongoing: 2022-06-04T01:49:40AEST SOLID is something (more) applicable to OOP than functions(?)
+#   Ongoing: 2022-06-04T01:49:55AEST open-closed principle example
 #	}}}
 #	TODO: 2022-05-18T02:12:01AEST code-craft/clean-code/03-functions, plausible data-flow / roles for each object, complete example doing something that makes calls of 'renderPageWithSetupsAndTeardowns' make sense
 #   TODO: 2022-05-21T06:18:14AEST code-craft/clean-code/03-functions, verification/enforcing of python type hints (primative/custom types)
@@ -412,7 +414,6 @@ class MenuChoiceHandler_ii:
 #print(m2.mainMenu.availableTeams)
 #   }}}
 
-
 #   LINK: https://towardsdatascience.com/12-of-my-favorite-python-practices-for-better-functions-7a21d18cfb38
 #   {{{
 #   1)  Input/Output
@@ -493,26 +494,124 @@ def get_mean(x: list) -> float:
 
 #   }}}
 
-#   LINK: https://towardsdatascience.com/more-methods-means-better-code-1d3b237f6cf2
-#   {{{
-
-#   }}}
-
 #   LINK: https://towardsdatascience.com/python-clean-code-6-best-practices-to-make-your-python-functions-more-readable-7ea4c6171d60
 #   {{{
+#   Functions should:
+#       be small
+#       do one thing
+#       have a consistent level of abstraction
+#       have fewer than 4 arguments
+#       have no duplication
+#       use descriptive names
+
+#   A long descriptive name is better than a short enigmatic name. A long descriptive name is better than a long descriptive comment.
+
+#   If a function has more than 3 arguments, consider turning it into a class
+#   <(Set all necessary variables in the ctor (and don't allow them to be changed?))>
+#   <(Use '@staticmethod' for methods which do not use member variables(?))>
+
 #   }}}
+
 #	LINK: https://towardsdatascience.com/a-walkthru-for-writing-better-functions-6cb37f2fa58c
 #	{{{
+#   1)  Do one thing.
+
+#   2)  When using libraries, accept same arguments that those libraries use.
+#       (Especially when providing options with '**kwargs')
+
+#   3)  Providing the user with options for the format of output. 
+#   Example: pythonic call-for-list function using <(argument-<>)>
+def read_images(paths, *args, **kwargs):
+    return [ read_image(p, *args, **kwargs) for p in paths ]
+
+#   4)  Make code work for multiple data structures
+
 #	}}}
+
 #	LINK: https://towardsdatascience.com/comprehensive-guide-to-writing-python-functions-others-can-use-2fa186c6be71
 #	{{{
+#   A function's docstring is available through its '__doc__' attribute
+#   Alternatively: inspect.getdoc()
+
+#   Do one thing. This keeps functions easy to debug.
+
+#   Google style docstrings:
+def google_style(arg_1, arg_2=42):
+    """Description of what the function does.
+
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    Aliquam venenatis magna a consequat mollis. In ultrices consequat nibh. 
+    Sed eu sollicitudin dui. Phasellus eu iaculis justo. 
+
+    Args:
+        arg_1 (type): Description of arg_1 that can continue 
+            to the next line with 2 space indent.
+        arg_2 (int, optional): Write optional when the argument 
+            has a default value
+
+    Returns:
+        bool: Optional desc. of the return value_1
+        dict: Optional desc. of the return value_2
+        Extra lines shouldn't be indented
+
+    Raises:
+        ValueError: Describe the case where your 
+        function intentionally raises this error 
+
+    Notes:
+        Extra notes and use cases of the function in the
+        form of free text.
+    """
+
+#   Numpy style doc strings
+def numpy_style(arg_1, arg_2=42):
+    """
+    Description of the function's purpose
+
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    Aliquam venenatis magna a consequat mollis. In ultrices consequat nibh. 
+    Sed eu sollicitudin dui. Phasellus eu iaculis justo. 
+
+    Parameters
+    ----------
+    arg_1: expected type of arg_1
+      Description of the argument.
+      Multi-lines are allowed
+    arg_2: int, optional
+      Again, write optional when argument
+      has a default value
+
+    Returns
+    -------
+    The type of the return value
+      Can include a desc of the returned value.
+    """
+
 #	}}}
-#	LINK: https://epirhandbook.com/en/writing-functions-1.html
-#	{{{
-#	}}}
+
 #	LINK: https://en.wikipedia.org/wiki/SOLID
 #	{{{
+#   <(SOLID is an OOP topic?)>
+#   Single Responsibility Principle
+#           A class should have a single responsibility.
+#           There should never be more than one reason for a class to change.
+#   Open Closed Principle
+#           Software entities should be open for extension, but closed for modification.
+#           That is, allow the behaviour of a class to be extended without requiring modification to its source code.
+#           <(It shouldn't be necessary to change a class in order to derive other classes from it?)>
+#           <(Applicability to functions (this is a rule about classes?) (Example?))>
+#   Liskov Substitution Principle (Design by Contract)
+#           Functions taking pointers/references to Base objects must be able to handle Derived objects. 
+#           <(Base/Derived must be interchangeable without breaking the program (because Derived is-a Base)?)>
+#           <(what about by-value?)>
+#   Interface Segregation Principle
+#           Many client-specific interfaces are better than a few general-purpouse interfaces.
+#           No code should depend on methods it does not use.
+#   Dependency Inversion Principle
+#           Depend on (use) interfaces, not implementations
+#           High level modules should not import anything from low level modules.
 #	}}}
+
 #	LINK: https://dev.to/levivm/coding-best-practices-chapter-one-functions-4n15
 #	{{{
 #	}}}
