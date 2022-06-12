@@ -51,6 +51,7 @@ import os
 #           deletePage
 #           save
 #   Use get/set/is for accessors/mutators/predicates. Use the same word to describe the same action each time.
+#   <(Verb-phrase: a verb and its arguments, excluding the subject noun)>
 
 #   Make overloaded constructors private, and create static factory methods with names describing the arguments:
 #           auto p = Complex.FromRealNumber(23.0)
