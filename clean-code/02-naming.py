@@ -5,7 +5,8 @@ import os
 #   {{{2
 #   Ongoing: 2022-06-10T01:52:42AEST the 'Visitor' pattern
 
-#   Names are everywhere in software. Names should reveal intention. 
+#   Names are everywhere in software. 
+#   Names should reveal intention. 
 #   If a variable needs a explanatory comment, then its name does not reveal its intent.
 #   Good names are an essential part of clean code. Take some time to chose good names, and replace them with better ones when they arise.
 
@@ -17,24 +18,23 @@ import os
 #   Avoid prefixes, enclose variables in classes/namespaces instead.
 
 #   Example: intention revealing vs meaningless names
-#       copyChars(a1, a2)
-#       copyChars(src, dest)
+#           copyChars(a1, a2)
+#           copyChars(src, dest)
 
 #   Example: names without meaningful distinctions become interchangeable
-#       Product
-#       ProductInfo
-#       ProductData
+#           Product
+#           ProductInfo
+#           ProductData
 
 #   'table' should never appear in a table name. 'object' should never appear in an object name.
 
-#   Names should be easy to search in a body of text.
 #   The length of a name should correspond to the size of its scope.
+#   Names should be easy to search in a body of text.
 
-#   Avoid literal constants. Use named variable instead.
+#   Avoid literal constant values. Use named variable instead.
 #   Avoid names that place any extra mental burden on the reader. 
 #   Single letter names are a poor choice in most contexts.
-#   Clarity is king.
-#   Say what you mean. Mean what you say.
+#   Clarity is king. Say what you mean. Mean what you say.
 
 #   Interfaces and Implementations: (suggestion), leave interface unadorned.
 #           interface:          ShapeFactory
@@ -50,7 +50,7 @@ import os
 #           postPayment
 #           deletePage
 #           save
-#   Use get/set/is for accessors/mutators/predicates
+#   Use get/set/is for accessors/mutators/predicates. Use the same word to describe the same action each time.
 
 #   Make overloaded constructors private, and create static factory methods with names describing the arguments:
 #           auto p = Complex.FromRealNumber(23.0)
@@ -62,8 +62,7 @@ import os
 
 #   Enclose names in a meaningful context. Don't add redundant/irrelevant context. 
 
-#   'Address' is a suitable name for a class where it is not necessary to distinguish between types of addresses.
-#   'PostalAddress' / 'MAC' / 'URI' are suitable class names to distinguish between types of addresses.
+#   'Address' is a suitable name for a class where it is not necessary to distinguish between types of addresses. 'PostalAddress' / 'MAC' / 'URL' are suitable class names to distinguish between types of addresses.
 
 
 #   <(resources?)>
