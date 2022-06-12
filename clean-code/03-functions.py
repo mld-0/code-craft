@@ -23,40 +23,95 @@ from io import StringIO
 #   Ongoing: 2022-05-30T23:41:46AEST is a function too long (rule 1): questions to ask to answer this question(?)
 #   Ongoing: 2022-06-04T01:49:40AEST SOLID is something (more) applicable to OOP than functions(?)
 #   Ongoing: 2022-06-04T01:49:55AEST open-closed principle example
+#   Ongoing: 2022-06-09T17:15:10AEST (how to ask if a function is doing more than 'one thing'?)
+#   Ongoing: 2022-06-13T00:03:31AEST <(Swift, what is a 'Protocol' (examples are taken from swift language guidelines))>
+#   Ongoing: 2022-06-13T02:36:23AEST (A personal rule/contention, regarding is a function too long): can one read it without any empty or collapsed lines in the body?
+#   Ongoing: 2022-06-13T02:54:10AEST language-specific naming conventions for functions/methods (and what is common between them?)
 #	}}}
-#	TODO: 2022-05-18T02:12:01AEST code-craft/clean-code/03-functions, plausible data-flow / roles for each object, complete example doing something that makes calls of 'renderPageWithSetupsAndTeardowns' make sense
 #   TODO: 2022-05-21T06:18:14AEST code-craft/clean-code/03-functions, verification/enforcing of python type hints (primative/custom types)
-#	Continue: 2022-05-18T23:48:43AEST example 'renderPageWithSetupsAndTeardowns' is later explored implemented as a class (called 'uncle_bob' in book source)
-#   Continue: 2022-05-30T22:56:52AEST how to best handle error-codes</errors> (where one cannot use exceptions)
+#   Continue: 2022-06-13T03:04:34AEST English Terminology, verb-phrase/noun-phrase
+#   Continue: 2022-06-13T03:06:14AEST summary
 
-
-#	Functions implement subroutines in modern languages. 
+#   Subroutines are implemented by functions in modern languages.
 #	They are the first line of organization in any program.
+
+#   English Terminology:
+#   {{{
+#   noun:
+#   verb:
+#   adjective:
+
+#   verb-phrase:
+#   noun-phrase:
+
+#   modal verb:
+#   participle: word based off a verb that expresses a state-of-being that functions as an adjective (ending in 'ing', 'ed', ect) (modifies a noun)
+#   <>
+
+#   }}}
+
+#   Rule 0: Naming
+#           A name should describe what a function does. A function should do what its name implies.
+#           One name per concept. One concept per name.
+#           Use the same word each time to describe the same action.
+#           A <Verb/Verb-phrase> if the function changes state of program.
+#           A <Noun/Noun-phrase> if the function returns a value.
+#           Precise naming is essential for code readability. A good name is a balance of short and verbose.
+#           Be consistent.
+#           <(camelCase, beginning with a lower)>
+#           <(school of thought that says only verb/verb-phrase (no noun/noun-phrase) function names)>
+#
+#   Use insert/replace (instead of get/set) for changes that are made externally.
+#
+#   Noun-phrase (no side effects)
+#           x.distance(to: y)
+#           i.successor()
+#   Verb-phrase (has side effects)
+#           print(x)
+#           x.sort()
+#           x.append(y)
+#
+#   Verbs:  Mutating:                   Non-mutating:
+#               x.sort()                    z = x.sorted()
+#               x.append(y)                 z = x.appending(y)
+#   Nouns:  Mutating:                   Non-mutating:
+#               x.formUnion(y)              z = x.union(y)
+#               x.successor(y)              z = x.formSuccessor(y)
+#
+#   Boolean methods should read as assertions about the receiver:
+#           x.isEmpty()
+#           line1.intersects(line2)
+#
+#   Functions that describe what something is should read as nouns, eg: 'Collection'
+#   Functions that describe a capacity should use the suffixes: 'able' / 'ible' / 'ing'
+#   <(Method names may be short(er) where their containing context is expressive)>.
+#   <(A noun is a poor name for a closure)>
 
 
 #	Rule 1: Small
 #	The first rule of functions is that they should be small. (The second rules is they should be even smaller than that. Functions should hardly ever be 20 lines long).
-#	Blocks within if/else/for/while statements should be one line long (probably a function call).
-#	This adds documentary value, because every block gets a descriptive name.
+#	Blocks within if/else/for/while statements should be one line long (probably a function call). This adds documentary value, because every block gets a descriptive name.
 #	Limit nested structures, ideally not more than 2 levels.
-
+#
 #   Is a function too long:
 #           Is it more than 20 names?
 #           Is it difficult to decide on a name?
+#           Do you have to collapse it to make the document readable? <(Does the function require empty lines to be readable?)>
 #           <?>
 
 
 #	Rule 2: Do One Thing
 #	Functions should do one thing. They should do it well. They should do it only. If a function does only those steps that are one level below the stated name of the function, then the function is doing only one thing. 
+#   <(A function should return something, or change the state of the program, but not both (rule 6))>.
 #	The purpouse of a function is to decompose a larger concept (described by the function name) into steps at the next level of abstraction.
-#	Or: <(Functions that do one thing cannot be reasonably divided into sections, if one can extract another function with a name that is not merely a restatement of the containing functions implementation, that function is doing more than one thing)> <(if you have a hard time deciding what the name of a method should be, then the method is probably doing too many things)>
-
+#	<(Functions that do one thing cannot be reasonably divided into sections, if one can extract another function with a name that is not merely a restatement of the containing functions implementation, that function is doing more than one thing - if you have a hard time deciding what the name of a method should be, then the method is probably doing too many things)>
 
 
 #	Rule 3: Single Level of Abstraction per Function
 #	Mixing levels of abstraction in the same function is always confusing. It makes unclear what is an essential concept and what is a detail. When essential concepts and details are mixed in a function, more and more details tend to accumulate in that function.
 #   
-#   Don't make me think - keeping exclusively to a higher level of abstraction means not presenting the reader with statements whose purpose they have to decipher themselves - a function call is self documenting, because the function name should describe what the function does.
+#   Don't make me think - keeping exclusively to a higher level of abstraction means not presenting the reader with statements whose purpose they have to decipher themselves. 
+#   A function call is self documenting, because the function name should describe what the function does.
 def isUserValid(user: 'User') -> bool:
     return isUnique(user) and isValidPassword(user.password) and isValidEmail(user.email) and isAdult(user.dob)
 #   
@@ -118,14 +173,14 @@ def urlForResource(resource: 'Resource') -> str:
 #   Temporal coupling: time related dependency, when something can be run.
 #   Where temporal couplings are necessary, it should be apparent in the function name.
 #   Ongoing: 2022-05-30T23:15:51AEST Have no side effects (rule 6) and functional programming (is the way to do it?) 
-
-#   Functional Programming: <(and side-effects?)>
-#   {{{
-#   LINK: https://www.yld.io/blog/the-not-so-scary-guide-to-functional-programming/#:~:text=A%20side%20effect%20is%20when,described%20as%20having%20side%20effects.
-#   (Functional programming is about) keeping buisness logic as pure functions and moving side effects to the edges of our process.
-#   Referential transparency: a function can be replaced with its result (and vice-versa) without incuring side effects.
-#   Replacing loops: map() / filter() / reduce()
-#   }}}
+#
+#   LINK: https://www.yld.io/blog/the-not-so-scary-guide-to-functional-programming/
+#   Functional programming: 
+#           keeping buisness logic as pure functions and moving side effects to the edges of our process.
+#   Referential transparency: 
+#           a function can be replaced with its result (and vice-versa) without incuring side effects.
+#   Replacing loops: 
+#           map() / filter() / reduce()
 
 
 #	Rule 7: Command Query Separation
@@ -144,7 +199,7 @@ def urlForResource(resource: 'Resource') -> str:
 #   Exceptions allow error processing code to be separated from logic.
 #   Doing so leads to messy deeply nested structures, since the caller must deal with any error immediately.
 #   Extract bodies of try-catch block into its own function, allowing complete separation of error handling and logic, and preserving Rule 2: 'Do One Thing'.
-#
+
 #   Example: use of error codes vs use of exceptions
 def HandleDeletePage_ErrorCodes(path):
     if deletePage(page) == E_OK:
@@ -157,6 +212,7 @@ def HandleDeletePage_ErrorCodes(path):
             logging.error('failed to delete reference')
     else:
         logging.error('failed to delete page')
+
 #   note that implementation / error-handling are seperate functions (Rule 2)
 def HandleDeletePage_Exceptions(path):
     try:
@@ -244,6 +300,7 @@ def EmployeeFactory(r: 'EmployeeRecord'):
 #        >3 = polyadic        (strongly avoid)
 #   More arguments make a function harder to read, and harder to test.
 #   Output arguments should be avoided. Use return to output data instead.
+
 #   Rules:
 #       Naming: verbs and keywords
 #           Monad: function/argument name should form a verb/noun pair
@@ -313,6 +370,7 @@ def EmployeeFactory(r: 'EmployeeRecord'):
 
 #	How To Approach Writing Functions:
 #	First draft code is by nature clumsy and disorganized. Write this code to pass all relevant unit tests, then (applying code-craft principles), refactor and reorganize while continuing to ensure tests pass.
+
 
 
 #	Continue: 2022-05-18T02:15:22AEST functions theory, implementation(/better-examples) can come later [...] (another reference for 'what makes a good function' (something online, with better examples to draw from?))
@@ -612,19 +670,173 @@ def numpy_style(arg_1, arg_2=42):
 #           High level modules should not import anything from low level modules.
 #	}}}
 
+#   LINK: https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/CodingGuidelines/Articles/NamingMethods.html
+#   {{{
+#   Don't twist a verb into an adjectaive by using a particple:
+#       Right:      setAcceptsGlyphInfo(flag)
+#       Wrong:      setGlyphInfoAccepted(flag)
+
+#   Verbs should be present tense
+#   Don't use the word 'do' / 'does'
+
+#   }}}
+
+#   LINK: https://betterprogramming.pub/a-useful-framework-for-naming-your-classes-functions-and-variables-e7d186e3189f
+#   {{{
+#   Functions:
+#   (P)A/HC/LC
+#       (prefix?) + action + high-context + low-context
+
+#   prefix: enhances the meaning of a function
+#           is: (boolean) characteristic of a context
+#           has: (boolean) whether the context possesses a value/state
+#           should: (boolean) of a certain action
+
+#   action: verb part of function name
+#           get: access internal data
+#           set: set internal data
+#           reset: restore initial state
+#           fetch: request which takes time
+#           remove: remove an item from a collection
+#           delete: erase/destroy a thing
+#           compose: create new data from existing data
+#           handle: handle an action (callback method)
+
+#   context: a domain the function operates on. 
+#   <(high/low context?)>
+
+#   In summary:
+#           Name:                   Prefix      Action (A)      High-context (HC)       Low-context (LC)
+#           getPost                             get             Post
+#           getPostData                         get             Post                    Data
+#           handleClickOutside                  handle          Click                   Outside
+#           shouldDisplayMessage    should      Display         Message
+
+
+#   Variables:
+#   SID: Short, Intuitive, Descriptive
+#   Avoid contraction / abbreviation
+#   Avoid encoding scope / namespace info
+#   Use pluralization only for lists / containers
+
+#   }}}
+
 #	LINK: https://dev.to/levivm/coding-best-practices-chapter-one-functions-4n15
 #	{{{
+#   Do one thing.
+
+#   Are we doing more than one thing: 
+#   the simplest way is if you can extract some logic from your function and putting it in a new one using a different logic name, most likely your function was doing more than one thing.
+
+#   Same level of abstraction within functions.
+
+#   2 >= levels of indentation
+
+#   Example: Bad
+def buy_concert_ticket(user, ticket):
+    ticket_price = ticket.price
+    user_age = user.age
+    if user.age >= 18:
+        user_money = user.money
+        if user_money >= ticket_price:
+            seats = stadium.seats
+            seat_available = None
+            for seat in seats:
+                if seat.is_available():
+                    seat_available = seat
+                    break
+            if seat_available: 
+                seat.owner = user
+                user.money -= ticket.price
+                print("Congratulations, you have a seat")
+            else:
+                print("There is not available seat")
+        else:
+            print("Sorry you don't have enough balance")
+    else:
+        print("You are not allowed to buy a ticket")
+
+#   Example: Better
+def buy_concert_ticket(user, ticket):
+    if not user_can_buy_a_ticket(user, ticket):
+        return
+    buy_available_seat(user)
+    return
+def user_can_buy_a_ticket(user, ticket):
+    if not user_has_legal_age(user, ticket):
+        print("You are not allowed to buy a ticket")
+        return False
+    if not user_has_enough_balance(user, ticket):
+        print("Sorry you don't have enough balance")
+        return False
+    return True
+def user_has_legal_age(user):
+    user_age = user.age
+    if not user.age >= 18:
+        return False
+    return True
+def user_has_enough_balance(user, ticket):
+    user_money = user.money
+    ticket_price = ticket.price
+    if user_momey >= ticket_price:
+        return True
+    return False
+def buy_available_seat(user):
+    available_seat = get_available_seat()
+    if not available_seat:
+        print("There is not available seat")
+    buy_seat(user, available_seat)
+    return
+def get_available_seat():
+    seats = stadium.seats
+    for seat in seats:
+        if seat.is_available():
+            return seat
+def buy_seat(user, seat):
+    seat.owner = user
+    user.money -= ticket.price
+    print("Congratulations, you have a seat")
+    return
+
+#   As soon as we use the word "AND" to describe what a function does, that function is doing more-than-one-thing.
+
 #	}}}
+
 #	LINK: https://www.quora.com/What-are-some-best-practices-in-defining-function-or-method-parameters-in-programs
 #	{{{
+
+#   SOLID
+
+#   No unused arguments
+#   Less arguments is better
+#   Use Objects to collect/group (related) arguments
+#   Declare arguments const wherever possible
+#   Avoid pointers/references where possible
+#   Constrain/validate parameters where possible
+#   Use meaningful parameter names
+
+#   Smaller functions are more: readable, maintainable, testable, reusable
+
 #	}}}
-#	LINK: https://www.reddit.com/r/coding/comments/9yfv4/best_practice_should_functions_return_null_or_an/
-#	{{{
-#	}}}
+
+
+#   LINK: https://github.com/kettanaito/naming-cheatsheet
+#   {{{
+#   }}}
 
 
 #   Summary:
 #       Functions should be short. They should be even shorter than that.
-#       <(Anything that cannot be done in 3 lines should be extracted)>
+#       Functions should do one thing (return something xor change something).
+#       Functions should contain a consistent level of abstraction.
+#       A name should describe what a function does. A function should do what its name implies.
+#       A long descriptive name is better than a short enigmatic one.
+#       (Strongly) prefer exceptions to error codes.
+#       Anything that cannot be done in 3 lines should be extracted.
+#       Less arguments > more arguments. 
+#       Where there are multiple related arguments, wrap them into a class.
+#       The number of arguments can be reduced by turning the function into a class.
+#       Avoid flag arguments - declare two functions instead.
+#       Avoid output arguments - use a class and change its member variables instead.
 #       <>
 
