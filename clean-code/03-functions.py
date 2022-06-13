@@ -1,7 +1,5 @@
-#	VIM SETTINGS: {{{3
 #	vim: set tabstop=4 modeline modelines=10 foldmethod=marker:
 #	vim: set foldlevel=2 foldcolumn=2:
-#	}}}1
 import sys
 import os
 import logging
@@ -35,21 +33,6 @@ from io import StringIO
 #   Subroutines are implemented by functions in modern languages.
 #	They are the first line of organization in any program.
 
-#   English Terminology:
-#   {{{
-#   noun:
-#   verb:
-#   adjective:
-
-#   verb-phrase:
-#   noun-phrase:
-
-#   modal verb:
-#   participle: word based off a verb that expresses a state-of-being that functions as an adjective (ending in 'ing', 'ed', ect) (modifies a noun)
-#   <>
-
-#   }}}
-
 #   Rule 0: Naming
 #           A name should describe what a function does. A function should do what its name implies.
 #           One name per concept. One concept per name.
@@ -71,12 +54,12 @@ from io import StringIO
 #           x.sort()
 #           x.append(y)
 #
-#   Verbs:  Mutating:                   Non-mutating:
-#               x.sort()                    z = x.sorted()
-#               x.append(y)                 z = x.appending(y)
-#   Nouns:  Mutating:                   Non-mutating:
-#               x.formUnion(y)              z = x.union(y)
-#               x.successor(y)              z = x.formSuccessor(y)
+#   Verbs:      Mutating:                   Non-mutating:
+#                   x.sort()                    z = x.sorted()
+#                   x.append(y)                 z = x.appending(y)
+#   Nouns:      Mutating:                   Non-mutating:
+#                   x.formUnion(y)              z = x.union(y)
+#                   x.formSuccessor(y)          z = x.successor(y)
 #
 #   Boolean methods should read as assertions about the receiver:
 #           x.isEmpty()
