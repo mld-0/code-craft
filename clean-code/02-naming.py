@@ -108,5 +108,46 @@ import os
 
 #   LINK: https://github.com/kettanaito/naming-cheatsheet
 #   {{{
+#   Use English
+#   Use one naming convention, and be consistent
+
+#   S-I-D: Short, Intuitive, Descriptive
+
+#   Do not use contractions
+#   Avoid context duplication
+#   Reflect the expected result
+
+#   Functions:
+#   (P)A/HC/LC   (prefix?) + action + high-context + low-context
+#
+#   prefix: enhances the meaning of a function
+#       is: (boolean) characteristic of a context
+#       has: (boolean) whether the context possesses a value/state
+#       should: (boolean) of a certain action
+#       min/max: describing boundaries or limits
+#       prev/next: state transitions
+#
+#   action: verb part of function name
+#       get: access internal data
+#       set: set internal data
+#       reset: restore initial state
+#       fetch: request which takes time
+#       remove: remove an item from a collection
+#       delete: erase/destroy a thing
+#       compose: create new data from existing data
+#       handle: handle an action (callback method)
+#
+#   context: a domain the function operates on. 
+#   
+#   high context: emphasizes the meaning of a variable
+#   low context: <?>
+#
+#       Name:                   Prefix      Action (A)      High-context (HC)       Low-context (LC)
+#       getPost                             get             Post
+#       getPostData                         get             Post                    Data
+#       handleClickOutside                  handle          Click                   Outside
+#       shouldDisplayMessage    should      Display         Message
+
+
 #   }}}
 

@@ -356,7 +356,6 @@ def EmployeeFactory(r: 'EmployeeRecord'):
 
 
 
-#	Continue: 2022-05-18T02:15:22AEST functions theory, implementation(/better-examples) can come later [...] (another reference for 'what makes a good function' (something online, with better examples to draw from?))
 #	Other Examples:
 
 #	LINK: https://github.com/Geeksltd/Programming.Tips/blob/master/docs/methods/stepdown-rule.md
@@ -671,33 +670,38 @@ def numpy_style(arg_1, arg_2=42):
 #       (prefix?) + action + high-context + low-context
 
 #   prefix: enhances the meaning of a function
-#           is: (boolean) characteristic of a context
-#           has: (boolean) whether the context possesses a value/state
-#           should: (boolean) of a certain action
+#       is: (boolean) characteristic of a context
+#       has: (boolean) whether the context possesses a value/state
+#       should: (boolean) of a certain action
+#       min/max: describing boundaries or limits
+#       prev/next: state transitions
 
 #   action: verb part of function name
-#           get: access internal data
-#           set: set internal data
-#           reset: restore initial state
-#           fetch: request which takes time
-#           remove: remove an item from a collection
-#           delete: erase/destroy a thing
-#           compose: create new data from existing data
-#           handle: handle an action (callback method)
+#       get: access internal data
+#       set: set internal data
+#       reset: restore initial state
+#       fetch: request which takes time
+#       remove: remove an item from a collection
+#       delete: erase/destroy a thing
+#       compose: create new data from existing data
+#       handle: handle an action (callback method)
 
 #   context: a domain the function operates on. 
-#   <(high/low context?)>
+
+#   high context: emphasizes the meaning of a variable
+#   low context: <?>
+
 
 #   In summary:
-#           Name:                   Prefix      Action (A)      High-context (HC)       Low-context (LC)
-#           getPost                             get             Post
-#           getPostData                         get             Post                    Data
-#           handleClickOutside                  handle          Click                   Outside
-#           shouldDisplayMessage    should      Display         Message
+#       Name:                   Prefix      Action (A)      High-context (HC)       Low-context (LC)
+#       getPost                             get             Post
+#       getPostData                         get             Post                    Data
+#       handleClickOutside                  handle          Click                   Outside
+#       shouldDisplayMessage    should      Display         Message
 
 
 #   Variables:
-#   SID: Short, Intuitive, Descriptive
+#   S-I-D: Short, Intuitive, Descriptive
 #   Avoid contraction / abbreviation
 #   Avoid encoding scope / namespace info
 #   Use pluralization only for lists / containers
@@ -801,11 +805,6 @@ def buy_seat(user, seat):
 #   Smaller functions are more: readable, maintainable, testable, reusable
 
 #	}}}
-
-
-#   LINK: https://github.com/kettanaito/naming-cheatsheet
-#   {{{
-#   }}}
 
 
 #   Summary:
