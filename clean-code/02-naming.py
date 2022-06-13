@@ -5,6 +5,44 @@ import os
 #   {{{2
 #   Ongoing: 2022-06-10T01:52:42AEST the 'Visitor' pattern
 
+#   English Terminology:
+#   {{{
+#   noun: a thing
+#   verb: an action or state-of-being
+#   adjective: describes or changes a noun 
+
+#   verb-phrase: a verb and its arguments, excluding the subject
+#   {{{
+#           Yankee batters (hit the ball well enough to win their first World Series since 2000)
+#           Mary (saw the man through the window)
+#           David (gave Mary a book)
+#   }}}
+
+#   noun-phrase: a phrase, surrounding a noun, that serves the role of a noun
+#   {{{
+#           (Current economic weakness) may be (a result of high energy prices)
+#           (Almost every sentence) contains (at least one noun phrase)
+#           (The subject noun phrase that is present in this sentence) is long
+#   }}}
+
+#   determiner: express the <(reference: link between objects)> of a noun in context
+#   {{{
+#       articles:		                the/a/an 
+#       demonstratives:		            this/that 
+#       possesive determiners:		    my/their 
+#       quantifiers:		            many/all/no 
+#       distributive:		            each/any
+#       interrogative:		            which
+#   }}}
+
+#   modal verb: indicates a <(modality: relationship to reality or the truth)> can/could/may/might/shall/should/will/would/must 
+
+#   participle: word based off a verb that expresses a state-of-being that functions as an adjective (ending in 'ing', 'ed', ect) (modifies a noun)
+
+#   <>
+
+#   }}}
+
 #   Names are everywhere in software. 
 #   Names should reveal intention. 
 #   If a variable needs a explanatory comment, then its name does not reveal its intent.
@@ -67,4 +105,8 @@ import os
 
 
 #   <(resources?)>
+
+#   LINK: https://github.com/kettanaito/naming-cheatsheet
+#   {{{
+#   }}}
 
