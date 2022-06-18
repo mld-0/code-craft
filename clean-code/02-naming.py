@@ -151,3 +151,50 @@ import os
 
 #   }}}
 
+
+#   Subject-Modifier vs Modifier-Subject
+#   LINK: https://softwareengineering.stackexchange.com/questions/160370/order-of-subject-and-modifiers-in-variable-names
+#   {{{
+#   <(We come here asking: count_written or written_count?)>
+#   <(If we (might) have multiple count_, that is the subject, if we have multiple written_, that is the subject?)>
+#   <(If we have multiple of neither [...] 'count' is the subject?)>
+
+#   Questions to ask: What is the subject and what is the modifier?
+#   <>
+
+#   Subject-Modifier:           Modifier-Subject 
+#       AreaAdujusted               AdujstedArea
+#       AreaInnerSurface            SurfaceAreaInner
+#       AreaOuterSurface            SurfaceAreaOuter
+#   In this case, both are bad: use Area[region] instead
+
+#   Assertions: 
+#   Modifier-Subject, (since that is generally better English) unless Subject-Modifier is better English.
+#   Subject-Modifier is something designers do only to satisfy IntelliSense.
+#   Having difficulty with long lists in intellisense isn't a variable naming problem, it's a class size problem. 
+#   Never use a particular coding convention only to satisfy your programming environment.
+#   Use the word order you'd use when writing it in normal English. If you have multiple such prefixed properties, fields (and methods), consider putting those members together in a related class
+
+#   Which is the modifier: wallThickness
+#           If working with walls, 'thickness' is the modifier (and varname should be 'thicknessWall')
+#           If working with thicknesses, 'wall' is the modifier 
+
+#   There is no always-best-option, consider:
+#   Which order is most likely to leave the reader with the correct purpose of the variable?
+#   Which order is better english?
+
+#   Consider: timeStart vs startTime
+#   (We presumedly must also have endTime, elapsedTime)
+#   <(We are working with times, hence 'start' is the modifier)>
+#   
+
+#   As a general rule 'written_count' is the better variable name ... in this case, I contend 'count_written' is better
+
+#   Use the best for the situation: prefer 'Modifier-Subject', but choose 'Subject-Modifier' where it is more readable.
+
+#   }}}
+
+#   LINK: http://www.oualline.com/style/c03.html
+#   {{{
+#   }}}
+
