@@ -12,32 +12,43 @@ import os
 #   adjective: describes or changes a noun 
 
 #   verb-phrase: a verb and its arguments, excluding the subject
-#   {{{
 #           Yankee batters (hit the ball well enough to win their first World Series since 2000)
 #           Mary (saw the man through the window)
 #           David (gave Mary a book)
-#   }}}
 
 #   noun-phrase: a phrase, surrounding a noun, that serves the role of a noun
-#   {{{
 #           (Current economic weakness) may be (a result of high energy prices)
 #           (Almost every sentence) contains (at least one noun phrase)
 #           (The subject noun phrase that is present in this sentence) is long
-#   }}}
+
+#   noun-adjunct: an optional noun that modifies another noun, similar to an adjective
+#   That is, a noun functioning as a pre-modifier in a noun-phrase.
+#           (Chicken) soup
+#           (Field) player
+
+#   modal verb: indicates a <(modality: relationship to reality or the truth)> 
+#           can/could/may/might/shall/should/will/would/must 
+
+#   participle: word based off a verb that expresses a state-of-being that functions as an adjective (ending in 'ing', 'ed', ect) (modifies a noun)
 
 #   determiner: express the <(reference: link between objects)> of a noun in context
 #   {{{
-#       articles:		                the/a/an 
-#       demonstratives:		            this/that 
-#       possesive determiners:		    my/their 
-#       quantifiers:		            many/all/no 
-#       distributive:		            each/any
-#       interrogative:		            which
+#           articles:		                the/a/an 
+#           demonstratives:		            this/that 
+#           possesive determiners:		    my/their 
+#           quantifiers:		            many/all/no 
+#           distributive:		            each/any
+#           interrogative:		            which
 #   }}}
 
-#   modal verb: indicates a <(modality: relationship to reality or the truth)> can/could/may/might/shall/should/will/would/must 
+#   singular noun: refers to one person, place, or thing
+#   plural noun: refers to multiple things
 
-#   participle: word based off a verb that expresses a state-of-being that functions as an adjective (ending in 'ing', 'ed', ect) (modifies a noun)
+#   collective noun: a group taken as a whole
+#           choir, galaxy
+
+#   transitive verb: verb that requires an object to recieve the action
+#   direct noun: noun that is directly affected by action of a verb
 
 #   <>
 
@@ -79,17 +90,28 @@ import os
 #           implementation:     ShapeFactoryImpl
 
 #   Class Names: nouns or noun-phrases. Not a verb.
+#   Start with upper, camelCase.
 #           Customer
 #           WikiPage
 #           Account
 #           AddressParser
 
 #   Method names: verb or verb-phrase
+#   Start with lower, camelCase
 #           postPayment
 #           deletePage
 #           save
 #   Use get/set/is for accessors/mutators/predicates. Use the same word to describe the same action each time.
 #   <(Verb-phrase: a verb and its arguments, excluding the subject noun)>
+
+#   Variables: python advises snake_case for variables (to differentiate them from classes/methods)
+#   snake_case is arguably easier to read.
+
+#   Constants:
+#   Screaming snake case
+#   Avoid magic numbers, name all constants.
+#           MAX_COUNT
+#           USER_NAME_FIELD
 
 #   Make overloaded constructors private, and create static factory methods with names describing the arguments:
 #           auto p = Complex.FromRealNumber(23.0)
@@ -103,8 +125,88 @@ import os
 
 #   'Address' is a suitable name for a class where it is not necessary to distinguish between types of addresses. 'PostalAddress' / 'MAC' / 'URL' are suitable class names to distinguish between types of addresses.
 
+#   Put the most important word on the left:
+#           Bad         Push this button to lift the exit gate
+#           Good        To lift the exit gate, push this button
 
-#   <(resources?)>
+#   Defer to guidelines of language in question.
+
+
+#   Prefer 'Modifier-Subject', but use 'Subject-Modifier' wherever it is more readable
+#   LINK: https://softwareengineering.stackexchange.com/questions/160370/order-of-subject-and-modifiers-in-variable-names
+#   {{{
+#   <(We come here asking: count_written or written_count?)>
+#   <(If we (might) have multiple count_, that is the subject, if we have multiple written_, that is the subject?)>
+#   <(If we have multiple of neither [...] 'count' is the subject?)>
+
+#   Questions to ask: What is the subject and what is the modifier?
+#   <>
+
+#   Subject-Modifier:           Modifier-Subject 
+#       AreaAdujusted               AdujstedArea
+#       AreaInnerSurface            SurfaceAreaInner
+#       AreaOuterSurface            SurfaceAreaOuter
+#   In this case, both are bad: use Area[region] instead
+
+#   Assertions: 
+#   Modifier-Subject, (since that is generally better English) unless Subject-Modifier is better English.
+#   Subject-Modifier is something designers do only to satisfy IntelliSense.
+#   Having difficulty with long lists in intellisense isn't a variable naming problem, it's a class size problem. 
+#   Never use a particular coding convention only to satisfy your programming environment.
+#   Use the word order you'd use when writing it in normal English. If you have multiple such prefixed properties, fields (and methods), consider putting those members together in a related class
+
+#   Which is the modifier: wallThickness
+#           If working with walls, 'thickness' is the modifier (and varname should be 'thicknessWall')
+#           If working with thicknesses, 'wall' is the modifier 
+
+#   There is no always-best-option, consider:
+#   Which order is most likely to leave the reader with the correct purpose of the variable?
+#   Which order is better english?
+
+#   Consider: timeStart vs startTime
+#   (We presumedly must also have endTime, elapsedTime)
+#   <(We are working with times, hence 'start' is the modifier)>
+#   
+
+#   As a general rule 'written_count' is the better variable name ... in this case, I contend 'count_written' is better
+#   }}}
+
+
+#   LINK: https://dev.to/somedood/a-grammar-based-naming-convention-13jf
+#   {{{
+#   Prefer camelCase to snake_case
+
+#   Use SCREAMING_CASE for contants
+#   A true constant is a static value that does not depend on runtime values
+
+#   Name indervidual objects with the most apropriate singular noun
+
+#   Booleans should be prefixed with is/has/can/similar
+
+#   Arrays/containers should be named a plural noun, or a collective noun if that is more readable
+
+#   Functions: A verb, or verb + noun (where the verb/noun pair refer to each other)
+#           GetProccess()
+#           WhereObject()
+#           MeasureObject()
+
+#   Class: Proper noun in PascalCase
+
+#   Fields: As per variables
+#   Methods: omit noun of 'verb+noun' pair where object name fills its place
+
+#   Example:
+#       const TRUE_CONSTANT = Math.PI;
+#       const stringName = '';
+#       const numberName = 0;
+#       const isBooleanName = true;
+#       const objName = { };
+#       const arrayNames = [ ].map(name => name);
+#       function getFunctionName() { }
+#       class ClassName { }
+
+#   }}}
+
 
 #   LINK: https://github.com/kettanaito/naming-cheatsheet
 #   {{{
@@ -148,53 +250,11 @@ import os
 #       handleClickOutside                  handle          Click                   Outside
 #       shouldDisplayMessage    should      Display         Message
 
-
 #   }}}
 
 
-#   Subject-Modifier vs Modifier-Subject
-#   LINK: https://softwareengineering.stackexchange.com/questions/160370/order-of-subject-and-modifiers-in-variable-names
-#   {{{
-#   <(We come here asking: count_written or written_count?)>
-#   <(If we (might) have multiple count_, that is the subject, if we have multiple written_, that is the subject?)>
-#   <(If we have multiple of neither [...] 'count' is the subject?)>
-
-#   Questions to ask: What is the subject and what is the modifier?
-#   <>
-
-#   Subject-Modifier:           Modifier-Subject 
-#       AreaAdujusted               AdujstedArea
-#       AreaInnerSurface            SurfaceAreaInner
-#       AreaOuterSurface            SurfaceAreaOuter
-#   In this case, both are bad: use Area[region] instead
-
-#   Assertions: 
-#   Modifier-Subject, (since that is generally better English) unless Subject-Modifier is better English.
-#   Subject-Modifier is something designers do only to satisfy IntelliSense.
-#   Having difficulty with long lists in intellisense isn't a variable naming problem, it's a class size problem. 
-#   Never use a particular coding convention only to satisfy your programming environment.
-#   Use the word order you'd use when writing it in normal English. If you have multiple such prefixed properties, fields (and methods), consider putting those members together in a related class
-
-#   Which is the modifier: wallThickness
-#           If working with walls, 'thickness' is the modifier (and varname should be 'thicknessWall')
-#           If working with thicknesses, 'wall' is the modifier 
-
-#   There is no always-best-option, consider:
-#   Which order is most likely to leave the reader with the correct purpose of the variable?
-#   Which order is better english?
-
-#   Consider: timeStart vs startTime
-#   (We presumedly must also have endTime, elapsedTime)
-#   <(We are working with times, hence 'start' is the modifier)>
-#   
-
-#   As a general rule 'written_count' is the better variable name ... in this case, I contend 'count_written' is better
-
-#   Use the best for the situation: prefer 'Modifier-Subject', but choose 'Subject-Modifier' where it is more readable.
-
-#   }}}
-
-#   LINK: http://www.oualline.com/style/c03.html
+#   LINK: https://en.wikipedia.org/wiki/Naming_convention_(programming)
 #   {{{
 #   }}}
+
 
