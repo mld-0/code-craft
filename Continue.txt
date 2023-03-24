@@ -1,5 +1,5 @@
 object-design-style-guide:
-2023-03-22T23:28:53AEDT 03-creating-data-objects, exceptions vs assertions for validating ctor/function inputs
 2023-03-24T20:11:10AEDT 03-creating-data-objects, complete examples 3.23/3.24/3.25/3.26 (implement missing classes) (discussion/comparison of examples)
 2023-03-24T20:55:21AEDT 03-creating-data-objects, what is the problem with 'property filler method' example (3.10)?
+2023-03-24T23:00:19AEDT 04-manipulating-objects, complete chapter
 
