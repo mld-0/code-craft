@@ -4,6 +4,7 @@
 #   {{{2
 import math
 import re
+import datetime
 import unittest
 #   Ongoings:
 #   {{{
@@ -18,12 +19,12 @@ import unittest
 #   Ongoing: 2023-03-22T22:53:13AEDT an instance of 'EmailAddress' can only contain an email address that is valid -> (or at least it would in a language that doesn't allow the user to modify any member variable at will)
 #   Ongoing: 2023-03-22T22:56:56AEDT should argument to 'User' ctor be a string or an 'EmailAddress' (consider in python types are not enforced) [...] (also requiring 'User(EmailAddress("abc@gmail.com"))' from the client is obnoxious?)
 #   Ongoing: 2023-03-22T23:40:56AEDT exercises as examples (this chapter / other chapters)?
+#   Ongoing: 2023-03-24T21:04:42AEDT testing an assertion fails (vs testing an exception is thrown)
 #   }}}
 
-#   Continue: 2023-02-23T21:58:14AEDT complete chapter.
-#   Continue: 2023-03-22T23:28:53AEDT exceptions vs assertions for validating ctor/function inputs
+#   Data objects (or value-objects/entities)
 
-#   Require data needed to behave consistently:
+#   3.1) Require the minimum amount of data needed to behave consistently:
 #   For a position to be valid, it must have x/y values, so we require them in the ctor
 #   (Domain invariant: something that is always true for a given object)
 class Position:
@@ -34,7 +35,7 @@ class Position:
         return math.sqrt( (self.x - other.x) ** 2 + (self.y - other.y) ** 2 )
 
 
-#   Require data that is meaningful: (reject invalid data)
+#   3.2) Require data that is meaningful: (reject invalid data)
 class Coordinates:
     def __init__(self, lat: float, long: float):
         if not (float(lat) >= -90 and float(lat) <= 90):
@@ -98,15 +99,16 @@ class TestCoordinates(unittest.TestCase):
             c = Coordinates("", 0)
 
 
-#   Don't use custom exceptions for invalid arguments:
+#   3.3) Don't use custom exceptions for invalid arguments:
 #   (and don't try to recover from them, terminate the program and fix the function call)
 
 #   There may be a case for custom exceptions for runtime errors we may wish to recover from
 
-#   Unit tests expecting an exception should validate that the correct exception is thrown:
+#   3.4) Unit tests expecting an exception should validate that the correct exception is thrown:
 #   (one way to do this without using custom exceptions is to check the exception error message)
 
-#   Extract new objects to prevent domain invariants being verified in multiple places:
+
+#   3.5) Extract new objects to prevent domain invariants being verified in multiple places:
 #   (consider creating such a type wherever a function accepts a primitive argument which it must validate)
 class EmailAddress:
     def __init__(self, emailAddress):
@@ -126,7 +128,7 @@ class User:
 u = User("abc@gmail.com")
 
 
-#   Extract new objects to represent composite values:
+#   3.6) Extract new objects to represent composite values:
 #   Some types belong together / frequently get passed together
 class Money:
     def __init__(self, amount, currency):
@@ -145,7 +147,7 @@ class Account:
 a = Account.new("Larry", 5700, "GBP")
 
 
-#   Assertions vs Exceptions for validating ctor arguments:
+#   3.7) Assertions vs Exceptions for validating ctor arguments:
 #   <(contention: use assertions instead of exceptions?)> ... (is that what the book is even saying?)
 #   <(contention: unit tests are not necessary for cases where errors can be prevented by the type system)>
 #   {{{
@@ -153,20 +155,159 @@ a = Account.new("Larry", 5700, "GBP")
 #   }}}
 
 
-
 #   Don't collect exceptions:
 #   In general, don't attempt to provide a list of everything that fails validation, simply throw an exception for the first thing to fail, and leave the next exception for when the first invalid value has been corrected.
 #   If it is necessary to supply the user with a list of everything wrong with the data they submitted, use a data transfer object (DTO).
 
 
-#   Don't inject dependencies, optionally pass them as method arguments:
+#   3.8) Don't inject dependencies, optionally pass them as method arguments:
 #   <(Service object dependencies should be injected as ctor arguments, however data-objects ctors should only receive primitives or other data-objects, if a data-object needs a service to perform some task, it should be provided as a method argument)>
 #   <(rationale?)>
-#   <(examples: 3.23/3.24 vs 3.25/3.26 ... 'PasswordHasher'?)>
+#   <(examples: 3.23/3.24 vs 3.25/3.26)>
+#   {{{
+
+def _3_23():
+    class Money:
+        def __init__(self, amount: int, currency: Currency):
+            self.amount = amount
+            self.currency = currency
+        def convert(self, exchangeRateProvider: ExchangeRateProvider, targetCurrency: Currency) -> 'Money':
+            exchangeRate = exchangeRateProvider.getRateFor(self.currency, targetCurrency)
+            return exchangeRate * self.amount
 
 
-#   Use named ctors (factory functions):
+#   Doesn't use 'ExchangeRateProvider' (require 'Money' to expose its 'amount/currency variables)
+def _3_24():
+    class ExchangeRate:
+        def __init__(self, currencyFrom: Currency, currencyTo: Currency, rate: float):
+            self.currencyFrom = currencyFrom
+            self.currencyTo = currencyTo
+            self.rate = rate
+        def convert(amount: int) -> 'Money':
+            return Money(amount * self.rate, currencyTo)
+
+    #exchangeRateProvider = ...
+    money = Money(53, Currency("AUD"))
+    exchangeRate = exchangeRateProvider.getRateFor(money.currency, Currency("GBP"))
+    result = exchangeRate.convert(money.amount)
+
+#   Pass 'ExchangeRate' instead of 'ExchangeRateProvider'
+def _3_25():
+    class Money:
+        def __init__(self, amount: int, currency: Currency):
+            self.amount = amount
+            self.currency = currency
+        def convert(exchangeRate: ExchangeRate) -> 'Money':
+            assert self.currency == exchangeRate.fromCurrency()
+            return Money(exchangeRate.rate * self.amount, exchangeRate.currencyTo)
+
+    #exchangeRateProvider = ...
+    money = Money(53, Currency("AUD"))
+    exchangeRate = exchangeRateProvider.getRateFor(money.currency, Currency("GBP"))
+    result = money.convert(exchangeRate)
+
+#   Define new service class 'ExchangeService'
+def _3_26():
+    class ExchangeService:
+        def __init__(self, exchangeRateProvider: ExchangeRateProvider):
+            self.exchangeRateProvider = exchangeRateProvider
+        def convert(money: Money, targetCurrency: Currency) -> 'Money':
+            exchangeRate = exchangeRateProvider.getRateFor(money.currency, targetCurrency)
+            return Money(money.amount * exchangeRate, targetCurrency)
+
+    #exchangeRateProvider = ...
+    money = Money(53, Currency("AUD"))
+    exchangeService = ExchangeService(exchangeRateProvider)
+    result = exchangeService.convert(money, Currency("GBP"))
+
+
+#   Comparing 3.23/3.24/3.25/3.26:
+#   <>
+
+#   }}}
+
+#   <(example: exercise 'PasswordHasher')>
+#   {{{
+#   }}}
+
+
+#   3.9) Use named ctors (factory functions):
 #   (use the default ctor for service objects, and provide factory functions for data objects)>
 #   <(rationale?)>
 
+#   The constructor can be made private to force clients to use factory functions
+
+class Date:
+    def __init__(self):
+        self.format = 'd/m/Y'
+        self.date = None
+    def fromString(date: str) -> 'Date':
+        result = Date()
+        result.date = datetime.datetime.fromisoformat(date)
+
+#   Don't immediately create symmetrical 'toString()' method (without being sure of the need for it)
+
+#   Factory functions <can/should> use names from the problem domain
+class SalesOrder:
+    def __init__(self):
+        ...
+    def place() -> 'SalesOrder':
+        result = SalesOrder()
+        ...
+        return result
+
+#   domain invariants common to multiple factory functions <can/should> be enforced by ctor
+class NaturalNumber:
+    def __init__(self, value):
+        assert value > 0
+        self.value = value
+    def fromInt(value: int) -> 'NaturalNumber':
+        return NaturalNumber(value)
+    def fromFloat(value: float) -> 'NaturalNumber':
+        return NaturalNumber(int(value))
+
+
+#   3.10) Don't use property filters
+#   (a property filler method looks like 'fromArray')
+class Position:
+    def __init__(self):
+        self._x = None
+        self._y = None
+    def fromArray(data: Dict[int]) -> 'Position':
+        result = Position()
+        result._x = data['x']
+        result._y = data['y']
+        return result
+#   <(the object's internals are now out in the open, make sure the construction of an object always happens in a way that's fully controlled by the object itself ... (so what is the problem here?))>
+
+
+
+#   3.11) Don't put anything more into an object than it needs
+#   If one doesn't know what data will be needed by a class, declare the class without member variables and only add them as needed
+
+
+#   3.12) Don't test valid ctor behaviour
+#   The only tests that should be written for a ctor are for invalid arguments to ensure that they are rejected correctly
+#   Creating other tests for ctors can lead to the premature addition of unneeded ctor arguments
+#   Writing tests for the desired behaviour of an object is a better way to establish what data is needed at construction time and what can be provided later
+#   Validating that an object has been constructed successfully can lead to member variables being unnecessarily exposed 
+
+
+#   3.13) Data transfer objects (DTOs) (the exception to the rule)
+#           Empty ctor
+#           Member variables are public (can be set one-by-one)
+#           Member variables are only primitive types (or other DTOs)
+#   Used to collect/contain data coming from outside the application
+#   With public variables there is no need for getters/setters
+#   Provide a 'validate()' method (which returns a list of all errors instead of throwing an exception at the first one)
+#   Can provide a factory function if appropriate (which can also perform validation)
+
+
+
+#   Summary:
+#           Data-objects receive values, not dependencies. On construction, they should receive only the minimum amount of data in order to behave consistently. (Don't pass service-objects to data-object ctors). Ctors should throw an <exception/assertion> if arguments are invalid in some way.
+#           Wrap primitive type arguments inside data-objects. Use this to combine related values. These objects should not be able to be constructed with invalid data. Use a domain-specific name for these classes.
+#           Use factory functions with domain-specific names for data objects instead of defining multiple ctors for different sorts of arguments.
+#           Don't provide any more data to a ctor than is needed 
+#           A Data-Transfer-Object (DTO) is a class with all-public member variables, which does not typically follow these rules
 
