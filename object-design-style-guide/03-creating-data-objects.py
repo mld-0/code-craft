@@ -148,10 +148,39 @@ a = Account.new("Larry", 5700, "GBP")
 
 
 #   3.7) Assertions vs Exceptions for validating ctor arguments:
-#   <(contention: use assertions instead of exceptions?)> ... (is that what the book is even saying?)
-#   <(contention: unit tests are not necessary for cases where errors can be prevented by the type system)>
+#   Use Exceptions to validate public function arguments
+#   Use Assertions to document program invariants
 #   {{{
-#   <(assertions vs exceptions for validating arguments)>
+
+#   LINK: https://softwareengineering.stackexchange.com/questions/137158/is-it-better-to-use-assert-or-illegalargumentexception-for-required-method-param
+#   Takeaway: Use exceptions, not assertions
+
+#   LINK: https://stackoverflow.com/questions/9169691/how-to-check-constructor-arguments-and-throw-an-exception-or-make-an-assertion-i
+#   Throwing exceptions in constructors is less than ideal. Whenever I need a type with restrictions on the domains of any of its constructor parameters, I make the constructor private and force instantiation through a factory that applies the constraints and either throws (via require, usually) or returns Try[ConstrainedType]
+
+#   LINK: https://docs.oracle.com/javase/8/docs/technotes/guides/language/assert.html
+#   Always consider that assertions may be disabled with a flag
+#   Use assertions for:
+#           Internal invariants
+#                   Something programmers know should be true
+#                   (assert it instead of commenting it)
+#           Control-Flow invariants
+#                   Any place one assumes should never be reached
+#                   (assert it instead of commenting it)
+#           Validating arguments for non-public functions
+#           Validating program invariants
+#   Do not use assertions for:
+#           Validating arguments for public functions
+#           Performing any check required for program correctness
+#           Performing any action with side effects
+
+#   LINK: https://stackoverflow.com/questions/1276308/exception-vs-assertion
+#   Use assertions for internal logic checks within your code, and normal exceptions for error conditions outside your immediate code's control (Don't forget assertions can be turned off)
+#   Unchecked exceptions are designed to detect programming errors of the users of your library, while assertions are designed to detect errors in your own logic
+#   Use assertions for any validation that is slow
+#   Assertions are for verifying invariants
+#   Use exceptions for conditions you expect to occur, and user assertions for conditions that should never occur
+
 #   }}}
 
 
@@ -305,7 +334,7 @@ class Position:
 
 
 #   Summary:
-#           Data-objects receive values, not dependencies. On construction, they should receive only the minimum amount of data in order to behave consistently. (Don't pass service-objects to data-object ctors). Ctors should throw an <exception/assertion> if arguments are invalid in some way.
+#           Data-objects receive values, not dependencies. On construction, they should receive only the minimum amount of data in order to behave consistently. (Don't pass service-objects to data-object ctors). Ctors should throw an exception if arguments are invalid in some way.
 #           Wrap primitive type arguments inside data-objects. Use this to combine related values. These objects should not be able to be constructed with invalid data. Use a domain-specific name for these classes.
 #           Use factory functions with domain-specific names for data objects instead of defining multiple ctors for different sorts of arguments.
 #           Don't provide any more data to a ctor than is needed 
