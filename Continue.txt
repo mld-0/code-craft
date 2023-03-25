@@ -1,5 +1,8 @@
 object-design-style-guide:
 2023-03-24T20:11:10AEDT 03-creating-data-objects, complete examples 3.23/3.24/3.25/3.26 (implement missing classes) (discussion/comparison of examples)
 2023-03-24T20:55:21AEDT 03-creating-data-objects, what is the problem with 'property filler method' example (3.10)?
-2023-03-24T23:00:19AEDT 04-manipulating-objects, complete chapter
+2023-03-25T21:34:10AEDT 'from __future__ import annotations'
+2023-03-25T22:25:55AEDT 03-creating-data-objects, doesn't actually run
+2023-03-25T22:53:08AEDT 04-manipulating-objects, python custom immutable types
+2023-03-25T23:07:01AEDT 04-manipulating-objects, 'Use internally recorded events to verify changes on mutable objects' - reasoning/examples/convince-me
 
