@@ -126,6 +126,57 @@ class Quantity:
 #   (in practice there are times when other objects must be mutable, but one should always default to making objects immutable)
 
 
+#   Immutable objects in Python:
+#   LINK: https://stackoverflow.com/questions/4828080/how-to-make-an-immutable-object-in-python
+#   {{{
+
+#   Using Dataclass (3.7+)
+from dataclasses import dataclass
+@dataclass(frozen=True)
+class ImmutableValueA:
+    value: Any
+
+
+#   Using @property
+#   (nothing is stopping us modifying variable '_value', but property 'value' is read only)
+class ImmutableValueB:
+    def __init__(self, value):
+        self._value = value
+    @property
+    def value(self):
+        return self._value
+
+
+#   Using namedtuple
+from collections import namedtuple
+ImmutableValueC = namedtuple('ImmutableValueC', ['value'])
+
+
+class TestImmutableClasses(unittest.TestCase):
+    def test_ImmutableValueA(self):
+        x = ImmutableValueA(value=1)
+        with self.assertRaises(AttributeError):
+            x.value = 5
+        self.assertEqual(x.value, 1)
+    def test_ImmutableValueB(self):
+        x = ImmutableValueB(1)
+        with self.assertRaises(AttributeError):
+            x.value = 5
+        self.assertEqual(x.value, 1)
+    def test_ImmutableValueC(self):
+        x = ImmutableValueC(1)
+        with self.assertRaises(AttributeError):
+            x.value = 5
+        self.assertEqual(x.value, 1)
+
+t = TestImmutableClasses()
+t.test_ImmutableValueA()
+t.test_ImmutableValueB()
+t.test_ImmutableValueC()
+
+#   }}}
+
+
 #   4.5) A modifier on an immutable object should return a modified copy
 class Integer:
     def __init__(self, value: int):
