@@ -6,4 +6,6 @@ object-design-style-guide:
 2023-03-25T23:07:01AEDT 04-manipulating-objects, 'Use internally recorded events to verify changes on mutable objects' - reasoning/examples/convince-me
 2023-03-26T21:59:48AEDT 06-query-methods, complete chapter
 2023-03-26T22:51:38AEDT 06-query-methods, python and interface classes
+2023-03-28T21:50:46AEDT 06-query-methods, SOLID principles
+2023-03-28T22:09:34AEDT 06-query-methods, exceptions/alternatives to command-query separation
 
