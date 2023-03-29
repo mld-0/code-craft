@@ -4,4 +4,7 @@ object-design-style-guide:
 2023-03-25T21:34:10AEDT 'from __future__ import annotations'
 2023-03-25T22:25:55AEDT 03-creating-data-objects, doesn't actually run
 2023-03-25T23:07:01AEDT 04-manipulating-objects, 'Use internally recorded events to verify changes on mutable objects' - reasoning/examples/convince-me
+2023-03-29T22:04:07AEDT 06-query-methods/07-command-methods, defining an abstraction for cross system boundry calls -> interface vs wrapper class?
+2023-03-29T22:07:31AEDT 07-command-methods, 7.6 abstractions for cross system boundary calls - (what is to be said that isn't a duplicate of 6.5?)
+2023-03-29T22:12:50AEDT 07-command-methods, complete chapter.
 
