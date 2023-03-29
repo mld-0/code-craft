@@ -21,6 +21,7 @@ from abc import ABC, abstractmethod
 #   2023-03-29T19:49:50AEDT python's 'ABC' doesn't require derived classes to implement a method unless it is decorated with '@abstractmethod'
 #   2023-03-29T20:25:58AEDT purpouse of 'GeneralShapeInterface' class (in addition to 2d/3d-ShapeInterface classes) (second link in SOLID principles section, called 'ManageShapeInterface' in example)  - (used to provide a common interface to different kinds of shapes?)
 #   2023-03-29T20:36:38AEDT Dependency inversion principle -> requiring DBConnectionInterface and SQLConnection is unnecessary, since presumably SQLConnection will already be wrapping the actual SQL API (also implementation classes are unlikely to follow or be derived from whatever interface class we define)
+#   2023-03-29T20:52:50AEDT "pick a GUID (sufficiently long random number)" seems like a worse solution than just violating command-query separation
 #   }}}
 
 #   6.1) Use query methods for information retrieval for mutable objects
@@ -254,14 +255,25 @@ assert x.hello() == "Default-Hello"
 #   (A test which relies on the outside world is an integration test, not a unit test)
 #   contention: don't use mocking tools for creating stubs, manually created objects will be easier to use and maintain
 
+#   Test method names should be descriptive names, they do not have to be short like method names, they may be whole sentences which describe what is being tested
+
 
 #   6.7) Query methods should use other query methods, not command methods
 #   Query methods should not have side effects, while command methods may
 #   Consider separating any query method with side effects into two methods
 
-#   Exceptions/alternatives to command-query separation
-#   LINK: https://blog.ploeh.dk/2014/08/11/cqs-versus-server-generated-ids/
+#   Alternatives/exceptions to command-query separation
 #   {{{
+#   LINK: https://dzone.com/articles/cqrs-is-an-anti-pattern-for-ddd
+#   LINK: https://blog.ploeh.dk/2014/08/11/cqs-versus-server-generated-ids/
+
+#   Command-query separation is helpful where scalability is required, but can otherwise unnecessarily complicate designs
+
+#   Obvious exception: stack.pop()
+
+#   Using a GUID is an alternative to a 'saveToDatabase()' needing to return an id for the new record
+#   (a randomly generated number long enough to be almost certain to be unique, provided by the caller)
+
 #   }}}
 
 
