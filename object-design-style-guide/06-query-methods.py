@@ -5,8 +5,10 @@
 from __future__ import annotations
 import sys
 import os
+import math
 import unittest
 from dataclasses import dataclass
+from abc import ABC, abstractmethod
 #   Notes:
 #   {{{
 #   2023-03-26T21:25:16AEDT book uses 'modifier method' to refer specifically to methods to return a modified copy of an immutable class (this is not the wider definition of 'modifier method'?)
@@ -15,6 +17,10 @@ from dataclasses import dataclass
 #   2023-03-28T21:56:10AEDT mock test objects is really a topic for a whole item
 #   2023-03-28T22:22:13AEDT 'InvoicePersistance' is a terrible name for a class for saving Invoices to a file(?)
 #   2023-03-28T22:26:29AEDT abstract vs interface class?
+#   2023-03-29T19:20:55AEDT SOLID-principles: InvoicePersistance and ParkingLot are poor examples(?) [...] (explanations for first link are generally not-the-best)
+#   2023-03-29T19:49:50AEDT python's 'ABC' doesn't require derived classes to implement a method unless it is decorated with '@abstractmethod'
+#   2023-03-29T20:25:58AEDT purpouse of 'GeneralShapeInterface' class (in addition to 2d/3d-ShapeInterface classes) (second link in SOLID principles section, called 'ManageShapeInterface' in example)  - (used to provide a common interface to different kinds of shapes?)
+#   2023-03-29T20:36:38AEDT Dependency inversion principle -> requiring DBConnectionInterface and SQLConnection is unnecessary, since presumably SQLConnection will already be wrapping the actual SQL API (also implementation classes are unlikely to follow or be derived from whatever interface class we define)
 #   }}}
 
 #   6.1) Use query methods for information retrieval for mutable objects
@@ -126,41 +132,119 @@ t.test_CounterImmutable()
 #   LINK: https://www.freecodecamp.org/news/solid-principles-explained-in-plain-english/
 #   LINK: https://www.digitalocean.com/community/conceptual-articles/s-o-l-i-d-the-first-five-principles-of-object-oriented-design
 
+#   An abstract class allows derived classes to override methods, an interface class does not allow methods to be implemented
+
+
 #   Single responsibility principle
 #   A class should do one thing, and therefore it should have only a single reason to change
 #   (There should only be one aspect of the software's specification which, if changed, would require a class to be changed)
 #   Avoid mixing business/persistence logic
 #
-#   An 'Invoice' class should not be responsible for saving an invoice to a file - define an 'InvoicePersistance' class to handle this
+#   An 'Invoice' class should not be responsible for saving an invoice to a file - define an 'InvoiceSaver' class to handle this
 
 
 #   Open-closed principle
 #   Classes should be open for extension and closed to modification
-#   (We should be able to add new functionality without altering the existing class)
+#   (We should be able to add new functionality without altering the existing class) (and should seek to avoid modifying existing classes)
 #   
 #   Use Interface classes
-#   Define an 'InvoicePersistance' abstract class, and create separate 'FilePersistence' and 'DatabasePersistence' to handle saving to files/databases respectively
+#   <(Define an 'InvoiceSaver' abstract class, and create separate 'InvoiceFileSaver' and 'InvoiceDatabaseSaver' to handle saving to files/databases respectively)>
 #
-#   <>
+#   An 'AreaCalculator' class would need to be modified every time a new shape is added -> suggesting it is the shape classes that should provide an 'area()' method to perform the calculation.
+#   (The way to create such an 'AreaCalculator' class would be to define a 'ShapeInterface' class, which can receive any object derived from such an interface an call its get-area method)
+
+class AreaCalculator:
+    @staticmethod
+    def area(shape: ShapeInterface) -> float:
+        return shape.area()
+class ShapeInterface(ABC):
+    @abstractmethod
+    def area(self) -> float:
+        pass
+class Square(ShapeInterface):
+    def __init__(self, length: float):
+        self.length = length
+    def area(self) -> float:
+        return self.length * self.length
+
+x = Square(4)
+assert AreaCalculator.area(x) == 16
 
 
 #   Liskov substitution principle
-#   Subclasses should be substitutable for their base class
+#   Derived classes should be substitutable for their base class (a subclass is-a base class)
 #   <>
 
 
 #   Interface segregation principle
-#   <>
+#   Many client-specific (specialised) interfaces are better than one general-purpose interface
+#   Clients wishing to create base classes should not be forced to implement methods they do not need
+#   <(don't define a ParkingLot class that handles payment logic and attempt to derive a FreeParkingLot from it, create a single parent class without payment logic and derive separate classes from it for paid/unpaid parking lots)>
+
+class TwoDimensionalShapeInterface(ABC):
+    @abstractmethod
+    def area(self): raise NotImplementedError()
+class ThreeDimensionalShapeInterface(ABC):
+    @abstractmethod
+    def volume(self): raise NotImplementedError()
+class Cube(TwoDimensionalShapeInterface, ThreeDimensionalShapeInterface):
+    def __init__(self, length):
+        self.length = length
+    def area(self):
+        return 6 * math.pow(self.length, 2)
+    def volume(self):
+        return math.pow(self.length, 3)
+
+x = Cube(4)
+assert x.area() == 96
+assert x.volume() == 64
+
+#   <(optionally, create a 'GeneralShapeInterface', which provides methods/an-interface common to different types of shapes?)>
 
 
 #   Dependency inversion principle
-#   <>
+#   (mechanism for implementing the open-closed principle)
+#   High-level classes should depend on interface/abstract classes instead of concrete classes
+#   (recall that changing the concrete class implementation should not be a reason for the high-level class to have to change)
+
+class DBConnectionInterface(ABC):
+    @abstractmethod
+    def connect(self): raise NotImplementedError()
+class SQLConnection(DBConnectionInterface):
+    def connect(self):
+        ...
+class PasswordReminder:
+    def __init__(self, db: DBConnectionInterface):
+        self.db = db
 
 #   }}}
 
 
 #   Python and interface classes:
 #   {{{
+#   LINK: https://stackoverflow.com/questions/2124190/how-do-i-implement-interfaces-in-python
+
+#   Using 'abc.ABC':
+class Interface(ABC):
+    @abstractmethod
+    def hello(self):
+        return "Default-Hello"
+class ImplementationNew(Interface):
+    def hello(self):
+        return "Hello"
+
+#   Access interface class (default) implementation through 'super()':
+class ImplementationDefault(Interface):
+    def hello(self):
+        return super().hello()
+
+x = ImplementationNew()
+assert x.hello() == "Hello"
+x = ImplementationDefault()
+assert x.hello() == "Default-Hello"
+
+#   Attempting to create an instance of an interface class will fail, as will attempting to create an instance of a subclass that doesn't implement all abstractmethods
+
 #   }}}
 
 
