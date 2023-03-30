@@ -57,12 +57,21 @@ from dataclasses import dataclass
 #   Always consider if the details of a command method could be abstracted further
 
 
-#   7.6) Define abstractions for commands that cross boundaries
+#   7.6) Define abstractions for commands that cross system boundaries
 #   <(what is to be said that isn't just a duplicate of 6.5?)>
+#   <>
 
 
-#   7.7) Only verify calls to command methods with a mock
+#   7.7) Consider mocking dependencies of command methods when testing
+#   (the test is for that method, not the events it dispatches / side effects it has)
+#   <>
 
 
 #   Summary:
+#   Command methods should perform tasks. They should have imperative (commanding) form names that describe the task they perform. They should not have side-effects and should return null/None.
+#   A method should not attempt to perform multiple tasks. Secondary tasks can be dispatched to an event listener to perform.
+#   Service objects should not have side-effects.
+#   Command methods may call service methods (but avoid the reverse).
+#   Define abstractions for commands that cross system boundaries.
+#   Consider mocking dependencies of command methods when testing.
 
