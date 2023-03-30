@@ -11,7 +11,7 @@ from dataclasses import dataclass
 #   Notes:
 #   {{{
 #   2023-03-30T20:03:44AEDT 'Order' / 'OrderDetails' seems convoluted for minimal benefit -> (better example for "Separate write models from read models"
-#   2023-03-30T20:13:22AEDT book uses name 'OrderForStockReport' (instead of 'OrderDetails')
+#   2023-03-30T20:13:22AEDT book uses name 'OrderForStockReport' (instead of 'OrderDetails') [...] (I mean, if going that route, call it 'Order_ForStockReport'?)
 #   }}}
 
 #   Service objects may need to retrieve information and perform tasks.
@@ -21,7 +21,8 @@ from dataclasses import dataclass
 #   8.1) Separate write models from read models
 #   Provide a separate read-only <(view into?)> objects for clients who do not need to modify them
 
-#   Example: separate 'Order' into write/read-model classes
+#   Example: create read-model object from write-model object to generate stock report
+#   {{{
 def _8_1():
     class Order:
         def __init__(self, purchaseOrderId: int, productId: int, orderQuantity: int) -> Order:
@@ -99,17 +100,28 @@ def _8_1():
     test_StockReportController()
 
 _8_1()
+#   }}}
 
 
 #   8.2) Create read models that are specific for their use cases
 #   <(an improved design to 8.1 could be to add a 'getStockReport()' method to 'OrderRepository')>
 #   contention: 'OrderForStockReport' is an acceptable name for a read-model object specifically for 'StockReportController'
-#   <>
-
-def _8_2():
-    ...
+#   contention: consider creating different read-models for different use cases
 
 
 #   8.3) Create read models directly from their data source
+#   Instead of using our dict of 'OrderDetails' objects to create the stock report, read the data from the database directly
+
+
+#   8.4) Build read models from domain events
+#   Querying the orders table in the database to calculate stock reports is likely to be slow.
+#   Instead, create a new table quantities_in_stock, and have an Event dispatcher/handler update this table whenever 'recieveItems()' is called.
+
+#   Example: use domain events to build read-model for stock report
 #   <>
+
+
+#   Summary:
+#   For domain objects, separate read models from write models. Clients that only need to retrieve data should use a read model object.
+#   A read model can be created directly from a write model, but it can be more efficient to use the data source used by the write model instead. If that is too expensive, consider creating a new data source that is updated by domain events.
 
