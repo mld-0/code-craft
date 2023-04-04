@@ -7,6 +7,8 @@ object-design-style-guide:
 2023-03-29T22:04:07AEDT 06-query-methods/07-command-methods, defining an abstraction for cross system boundry calls -> interface vs wrapper class?
 2023-03-29T22:07:31AEDT 07-command-methods, 7.6 abstractions for cross system boundary calls - (what is to be said that isn't a duplicate of 6.5?)
 2023-03-30T18:22:12AEDT 07-command-methods, 7.7 mocking of command method dependencies.
-2023-04-03T21:16:40AEST chapter exercise questions
-2023-04-03T21:42:22AEST 09-changing-service-behaviour, complete chapter.
+2023-04-03T21:16:40AEST (all) chapter exercise questions
+2023-04-04T21:24:24AEST extra/event-dispatcher-listener
+2023-04-04T22:01:40AEST extra/inheritance
+2023-04-04T22:45:04AEST 09-changing-service-behaviour, (using 'extra' items) complete chapter.
 
