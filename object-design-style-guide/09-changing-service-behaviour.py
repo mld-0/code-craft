@@ -13,6 +13,8 @@ from dataclasses import dataclass
 #   {{{
 #   2023-04-03T21:28:22AEST 'ParameterLoader' should have makeXmlLoader / makeJsonLoader factory functions(?)
 #   2023-04-03T21:30:08AEST 'ParameterLoader' hierachy, who should be responsible for checking file exists?
+#   2023-04-04T20:51:51AEST 'EnvParameterFileLoader' should be derived from 'FileLoader' / 'ParameterLoader' / nothing? [...] (why does 'EnvParameterFileLoader' / 'CachedParameterLoader' need to inherit anything ('ParameterLoader' does not) (besides being an example for decoration)) [...] (deriving from 'ParameterLoader' and calling 'super().load()' is what the book *meant* to do?) [...] (we could use composition and not derive from anything ... but that wouldn't be decoration?) [...] (chatgpt advises using composition not inheritance for decoration) ... (how do python '@myclass' official decorations do it?)
+#   2023-04-04T20:58:19AEST use 'assert issubclass(v, FileLoader)' to verify we are using the correct interface since type hints are not enforced 
 #   }}}
 
 #   The nature of software projects is to change over time
@@ -53,12 +55,12 @@ class XmlFileLoader(FileLoader):
 
 class ParameterLoader:
     def __init__(self, fileLoader: FileLoader):
+        assert issubclass(fileLoader, FileLoader)
         self.fileLoader = fileLoader
     def load(self, filePath: str) -> Dict:
         if not os.path.isfile(filePath):
             raise FileNotFoundError(filePath)
         return self.fileLoader.loadFile(filePath)
-
 
 #   9.3) Compose abstractions to achieve more complicated behaviour
 #   <>
@@ -68,8 +70,11 @@ class SmartFileLoader(FileLoader):
         loaders = { 'json': JsonFileLoader, 'xml': XmlFileLoader, }
         return SmartFileLoader(loaders)
     def __init__(self, loaders):
+        for (k,v) in loaders.items():
+            assert issubclass(v, FileLoader)
+            assert isinstance(k, str)
         self.loaders = loaders
-    def loadFile(filePath: str) -> Dict:
+    def loadFile(self, filePath: str) -> Dict:
         ext = os.path.splitext(filePath)[-1]
         if not ext in self.loaders.keys():
             raise Exception("ext=({ext}) not supported, supported=({self.loaders.keys()})")
@@ -77,6 +82,31 @@ class SmartFileLoader(FileLoader):
 
 
 #   9.4) Decorate existing behaviour
+#   A decorator class wraps an existing class and extends/modifies its behaviour without requiring modification of the origional class
+
+#   Example: replace certain values read by 'ParameterLoader'
+class EnvParameterFileLoader(ParameterLoader):
+    def __init__(self, fileLoader: FileLoader, envVar: Dict):
+        self.envVar = envVar
+        super().__init__(fileLoader)
+    def load(self, filePath: str) -> Dict:
+        params = super().load(filePath)
+        self.updateParams(params)
+        return params
+    def updateParams(self, params):
+        for (k,v) in params:
+            if k in self.envVar.items():
+                params[k] = self.envVar[k]
+
+#   Example: cache results of 'ParameterLoader'
+class CachedParameterLoader(ParameterLoader):
+    def __init__(self, fileLoader: FileLoader):
+        self.cache = dict()
+        super().__init__(fileLoader)
+    def load(self, filePath: str) -> Dict:
+        if filePath in self.cache.keys():
+            return self.cache[filePath]
+        return super().load(filePath)
 
 
 #   9.5) Use notification objects or event listeners for additional behaviour
