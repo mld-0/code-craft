@@ -11,4 +11,5 @@ object-design-style-guide:
 2023-04-04T21:24:24AEST extra/event-dispatcher-listener
 2023-04-04T22:01:40AEST extra/inheritance
 2023-04-04T22:45:04AEST 09-changing-service-behaviour, (using 'extra' items) complete chapter.
+2023-04-05T19:54:46AEST extra/inheritance, get and assert hierarchy ctor output instead of printing it
 
