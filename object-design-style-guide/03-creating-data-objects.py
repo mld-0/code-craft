@@ -2,10 +2,12 @@
 #   vim: set tabstop=4 modeline modelines=10:
 #   vim: set foldlevel=2 foldcolumn=2 foldmethod=marker:
 #   {{{2
+from __future__ import annotations
 import math
 import re
 import datetime
 import unittest
+from typing import Dict
 #   Ongoings:
 #   {{{
 #   Ongoing: 2023-02-23T21:07:39AEDT checking 'lat' / 'long' together or separately, setting one before checking both(?)
@@ -45,6 +47,19 @@ class Coordinates:
         self.lat = float(lat)
         self.long = float(long)
 
+#   Test that invalid ctor arguments are rejected
+class TestCoordinates(unittest.TestCase):
+    def test_Coordinates_init_lat_validation(self):
+        with self.assertRaises(ValueError) as e:
+            c = Coordinates(-91, 0)
+        self.assertEqual(str(e.exception), "invalid latitude=(-91), must be [-90,90]")
+        with self.assertRaises(ValueError):
+            c = Coordinates(91, 0)
+        with self.assertRaises(TypeError):
+            c = Coordinates(None, 0)
+        with self.assertRaises(ValueError):
+            c = Coordinates("", 0)
+
 
 #   Domain rules: at least 1 adult, at least 1 room, no more rooms than there are guests
 class ReservationRequest:
@@ -77,26 +92,14 @@ class Deal:
 #   Use Factory Functions where there are different cases requiring different arguments for the ctor
 #   <(bad example?)>
 class Line:
-    def make_dotted(dot_distance: float) -> 'Line':
+    def make_dotted(dot_distance: float) -> Line:
         l = Line()
         l.dot_distance = dot_distance
         return l
-    def make_solid() -> 'Line':
+    def make_solid() -> Line:
         l = Line()
         return l
 
-
-#   Unit-tests for type invariants
-class TestCoordinates(unittest.TestCase):
-    def test_Coordinates_init_lat_validation(self):
-        with self.assertRaises(ValueError):
-            c = Coordinates(-91, 0)
-        with self.assertRaises(ValueError):
-            c = Coordinates(91, 0)
-        with self.assertRaises(TypeError):
-            c = Coordinates(None, 0)
-        with self.assertRaises(ValueError):
-            c = Coordinates("", 0)
 
 
 #   3.3) Don't use custom exceptions for invalid arguments:
@@ -111,11 +114,11 @@ class TestCoordinates(unittest.TestCase):
 #   3.5) Extract new objects to prevent domain invariants being verified in multiple places:
 #   (consider creating such a type wherever a function accepts a primitive argument which it must validate)
 class EmailAddress:
-    def __init__(self, emailAddress):
+    def __init__(self, emailAddress: str):
         if not self._isValidEmail(emailAddress):
             raise ValueError(f"invalid email=({emailAddress})")
         self.emailAddress = emailAddress
-    def _isValidEmail(self, emailAddress):
+    def _isValidEmail(self, emailAddress: str):
         if re.fullmatch(r"([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|\"([]!#-[^-~ \t]|(\\[\t -~]))+\")@([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|\[[\t -Z^-~]*])", emailAddress):
             return True
         return False
@@ -270,7 +273,7 @@ class Date:
     def __init__(self):
         self.format = 'd/m/Y'
         self.date = None
-    def fromString(date: str) -> 'Date':
+    def fromString(date: str) -> Date:
         result = Date()
         result.date = datetime.datetime.fromisoformat(date)
 
@@ -280,7 +283,7 @@ class Date:
 class SalesOrder:
     def __init__(self):
         ...
-    def place() -> 'SalesOrder':
+    def place() -> SalesOrder:
         result = SalesOrder()
         ...
         return result
@@ -290,9 +293,9 @@ class NaturalNumber:
     def __init__(self, value):
         assert value > 0
         self.value = value
-    def fromInt(value: int) -> 'NaturalNumber':
+    def fromInt(value: int) -> NaturalNumber:
         return NaturalNumber(value)
-    def fromFloat(value: float) -> 'NaturalNumber':
+    def fromFloat(value: float) -> NaturalNumber:
         return NaturalNumber(int(value))
 
 
@@ -302,7 +305,7 @@ class Position:
     def __init__(self):
         self._x = None
         self._y = None
-    def fromArray(data: Dict[int]) -> 'Position':
+    def fromArray(data: Dict[int]) -> Position:
         result = Position()
         result._x = data['x']
         result._y = data['y']
@@ -334,9 +337,9 @@ class Position:
 
 
 #   Summary:
-#           Data-objects receive values, not dependencies. On construction, they should receive only the minimum amount of data in order to behave consistently. (Don't pass service-objects to data-object ctors). Ctors should throw an exception if arguments are invalid in some way.
-#           Wrap primitive type arguments inside data-objects. Use this to combine related values. These objects should not be able to be constructed with invalid data. Use a domain-specific name for these classes.
-#           Use factory functions with domain-specific names for data objects instead of defining multiple ctors for different sorts of arguments.
-#           Don't provide any more data to a ctor than is needed 
-#           A Data-Transfer-Object (DTO) is a class with all-public member variables, which does not typically follow these rules
+#   Data-objects receive values, not dependencies. On construction, they should receive only the minimum amount of data in order to behave consistently. (Don't pass service-objects to data-object ctors). Ctors should throw an exception if arguments are invalid in some way.
+#   Wrap primitive type arguments inside data-objects. Use this to combine related values. These objects should not be able to be constructed with invalid data. Use a domain-specific name for these classes.
+#   Use factory functions with domain-specific names for data objects instead of defining multiple ctors for different sorts of arguments.
+#   Don't provide any more data to a ctor than is needed 
+#   A Data-Transfer-Object (DTO) is a class with all-public member variables, which does not typically follow these rules
 

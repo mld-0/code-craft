@@ -30,7 +30,7 @@ import unittest
 #   Methods that change the entity's state should have no return type, and their names should be in imperative (commanding) form (eg: 'addLine()', 'finalize()'). They should not allow the object to end up in an invalid state.
 #   <(Don't expose internals for testing purposes, instead keep a change log and expose that)>
 class SalesInvoice:
-    def create(salesInvoiceID):
+    def create(salesInvoiceID: int):
         result = SalesInvoice()
         result.salesInvoiceID = salesInvoiceID
         return result
@@ -99,7 +99,7 @@ class Quantity:
         self.precision = precision
     def fromInt(quantity: int, precision: int):
         return Quantity(quantity, precision)
-    def add(self, other: 'Quantity') -> 'Quantity':
+    def add(self, other: Quantity) -> Quantity:
         if self.precision != other.precision:
             raise ValueError("precisions must match")
         return Quantity(self.quantity + other.quantity, self.precision)
