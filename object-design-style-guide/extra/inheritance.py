@@ -6,12 +6,13 @@
 #   {{{
 #   2023-04-05T19:35:00AEST instead of printing A B C - capture output and assert it against expected value
 #   2023-04-05T19:35:28AEST behaviour of all examples same for different python versions?
+#   2023-04-13T21:01:19AEST traits -> see effective-rust(?)
 #   }}}
 
 #   calling 'super()'
 #   Calls to base class ctors can be made as 'A.__init__(self)' or 'super().__init__()'
 #   (the former does not allow for dependency injection; use 'super()' instead)
-#   (use 'A.foo()' instead of 'super()' to access methods of 'A')
+#   (use 'A.foo()' instead of 'super()' to explicitly access methods of 'A')
 
 
 
@@ -73,12 +74,19 @@ def _multi_inheritance_2():
             print("B, ", end="")
 
     #   correct: 'B A C'
-    class C(A, B):
+    class C1(A, B):
         def __init__(self):
             super().__init__()
             print("C, ", end="")
 
-    c = C(); print();
+    #   correct: 'A B C'
+    class C2(B, A):
+        def __init__(self):
+            super().__init__()
+            print("C, ", end="")
+
+    c = C1(); print();
+    c = C2(); print()
     print()
 _multi_inheritance_2()
 
@@ -112,7 +120,55 @@ _multi_inheritance_handling_args()
 #   (interface classes without inheritance?)
 
 
-#   (python equivalent of a 'trait')
+#   traits vs interface classes
+#   <(Traits are a form of code reuse that are like but distinct from tradition inheritence)>
+#   Traits allow default implementations <(interface classes often do not?)>
+#   <(traits do not modify the class hierachy - presumedly refering to langauge other than python)>
+#   Traits are often used to encapsulate common behaviour for reuse - logging, error handling, or serializaiton
+
+def _printable_trait():
+
+    class Printable:
+        def print(self):
+            print(self)
+    class Person(Printable):
+        def __init__(self, name, age):
+            self.name = name
+            self.age = age
+        def __repr__(self):
+            return f"{self.name}, {self.age}"
+
+    person = Person("John Doe", 30)
+    person.print()
+
+_printable_trait()
+
+
+#   mixins are like traits, but typically rely on composition instead of inheritance
+def _printable_mixin():
+
+    class PrintableMixin:
+        def print(self):
+            print(self)
+
+    class Person:
+        def __init__(self, name, age):
+            self.name = name
+            self.age = age
+        def __repr__(self):
+            return f"{self.name}, {self.age}"
+
+    class PrintablePerson(PrintableMixin):
+        def __init__(self, person):
+            self.person = person
+        def __repr__(self):
+            return repr(self.person)
+
+    person = Person("John Doe", 30)
+    printable_person = PrintablePerson(person)
+    printable_person.print() 
+
+_printable_mixin()
 
 
 #   final classes
