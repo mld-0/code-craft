@@ -4,6 +4,7 @@
 #   {{{2
 import sys
 import io
+import difflib
 from contextlib import redirect_stdout
 #   Notes:
 #   {{{
@@ -11,6 +12,7 @@ from contextlib import redirect_stdout
 #   2023-04-05T19:35:28AEST behaviour of all examples same for different python versions?
 #   2023-04-13T21:01:19AEST traits -> see effective-rust(?)
 #   2023-04-13T22:40:36AEST 'check_stdout()' is in SnippetsLab (plz update on change)
+#   2023-04-13T23:09:48AEST traits and dependency injection
 #   }}}
 
 def check_stdout(obj, check, *args, **kwargs):
@@ -21,7 +23,8 @@ def check_stdout(obj, check, *args, **kwargs):
         x = obj(*args, **kwargs)
     result = buffer.getvalue().strip()
     if not result == check:
-        print(f"error, result=({result}), check=({check})")
+        diff = list(difflib.ndiff(result.splitlines(), check.splitlines()))
+        print("error, check failed:\n%s" % '\n'.join(diff).rstrip())
         exit(2)
     print(result)
     #   }}}
@@ -196,7 +199,7 @@ def _printable_mixin():
 
     person = Person("John Doe", 30)
     printable_person = PrintablePerson(person)
-    check_stdout(printable_person.print, "I am John Doe, age 30")
+    check_stdout(printable_person.print, "I am John Doe, age 30z")
 
 _printable_mixin()
 
