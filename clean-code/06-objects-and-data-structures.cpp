@@ -28,17 +28,18 @@ constexpr double pi = 3.141592653589793238463;
 //	Hiding implementation by offering abstract interfaces that allow manipulation of the essence of the data.
 
 //	Data Structure:
+//	implementation details are exposed to the world
 class PointConcrete {
 public:
-	//	implementation details are exposed to the world
 	double x;
 	double y;
 };
 
 //	Object:
+//	methods enforces access policy: coordinates can be read indervidually, but can only be set together
+//	implementation details remain hidden from client
 class PointAbstract {
 public:
-	//	methods enforces access policy: coordinates can be read indervidually, but can only be set together
 	double getX();
 	double getY();
 	void setCartesian(double x, double y);
@@ -46,7 +47,6 @@ public:
 	double getTheta();
 	void setPolar(double r, double theta);
 private:
-	//	implementation details remain hidden from client
 };
 
 
@@ -159,7 +159,7 @@ struct GeometryOO {
 //			ctxt.getScratchDir().getAbsolutePath()
 //	The first approach is likely to lead to an explosion in the number of methods. <(The second presumes 'getScratchDir()' returns a data strucutre (instead of an object)?)>. (Both are unappealing options).
 //	instead:
-//			<(?)>
+//			<>
 
 
 //	Expression-builder: <(A seperate class, which hides the underlying method-chaining to create an object, providing a single method for each combination of arguments)>
@@ -173,6 +173,10 @@ struct GeometryOO {
 
 //	Data-Transfer-Object: a class with public variables and no functions
 //	Active-Record-Object: Hybrid form of data-transfer-object, provides navigational methods like 'save()' and 'find()' (bad: use a seperate object containing this logic)
+
+
+//	Resources:
+//	<>
 
 
 int main()

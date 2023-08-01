@@ -142,7 +142,7 @@ import os
 #   Questions to ask: What is the subject and what is the modifier?
 #   <>
 
-#   Subject-Modifier:           Modifier-Subject 
+#   Subject-Modifier:           Modifier-Subject: (usually better)
 #       AreaAdujusted               AdujstedArea
 #       AreaInnerSurface            SurfaceAreaInner
 #       AreaOuterSurface            SurfaceAreaOuter

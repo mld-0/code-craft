@@ -1,12 +1,13 @@
+#   {{{3
 #	vim: set tabstop=4 modeline modelines=10 foldmethod=marker:
 #	vim: set foldlevel=2 foldcolumn=2:
+#   {{{2
 import sys
 import os
 import logging
 import typing
 import abc
 from io import StringIO
-#	{{{2
 #   Ongoings:
 #	{{{
 #	Ongoing: 2022-05-20T19:50:22AEST expand/provide-definitions until source is compile-able
@@ -33,6 +34,7 @@ from io import StringIO
 #   Subroutines are implemented by functions in modern languages.
 #	They are the first line of organization in any program.
 
+
 #   Rule 0: Naming
 #           A name should describe what a function does. A function should do what its name implies.
 #           One name per concept. One concept per name.
@@ -43,9 +45,9 @@ from io import StringIO
 #           Be consistent.
 #           <(camelCase, beginning with a lower)>
 #           <(school of thought that says only verb/verb-phrase (no noun/noun-phrase) function names)>
-#
+
 #   Use insert/replace (instead of get/set) for changes that are made externally.
-#
+
 #   Noun-phrase (no side effects)
 #           x.distance(to: y)
 #           i.successor()
@@ -53,34 +55,36 @@ from io import StringIO
 #           print(x)
 #           x.sort()
 #           x.append(y)
-#
+
 #   Verbs:      Mutating:                   Non-mutating:
 #                   x.sort()                    z = x.sorted()
 #                   x.append(y)                 z = x.appending(y)
 #   Nouns:      Mutating:                   Non-mutating:
 #                   x.formUnion(y)              z = x.union(y)
 #                   x.formSuccessor(y)          z = x.successor(y)
-#
+
 #   Boolean methods should read as assertions about the receiver:
 #           x.isEmpty()
 #           line1.intersects(line2)
-#
+
 #   Functions that describe what something is should read as nouns, eg: 'Collection'
 #   Functions that describe a capacity should use the suffixes: 'able' / 'ible' / 'ing'
 #   <(Method names may be short(er) where their containing context is expressive)>.
 #   <(A noun is a poor name for a closure)>
 
 
+
 #	Rule 1: Small
 #	The first rule of functions is that they should be small. (The second rules is they should be even smaller than that. Functions should hardly ever be 20 lines long).
 #	Blocks within if/else/for/while statements should be one line long (probably a function call). This adds documentary value, because every block gets a descriptive name.
 #	Limit nested structures, ideally not more than 2 levels.
-#
+
 #   Is a function too long:
 #           Is it more than 20 names?
 #           Is it difficult to decide on a name?
 #           Do you have to collapse it to make the document readable? <(Does the function require empty lines to be readable?)>
 #           <?>
+
 
 
 #	Rule 2: Do One Thing
@@ -90,37 +94,39 @@ from io import StringIO
 #	<(Functions that do one thing cannot be reasonably divided into sections, if one can extract another function with a name that is not merely a restatement of the containing functions implementation, that function is doing more than one thing - if you have a hard time deciding what the name of a method should be, then the method is probably doing too many things)>
 
 
+
 #	Rule 3: Single Level of Abstraction per Function
 #	Mixing levels of abstraction in the same function is always confusing. It makes unclear what is an essential concept and what is a detail. When essential concepts and details are mixed in a function, more and more details tend to accumulate in that function.
-#   
-#   Don't make me think - keeping exclusively to a higher level of abstraction means not presenting the reader with statements whose purpose they have to decipher themselves. 
-#   A function call is self documenting, because the function name should describe what the function does.
+
+#   Don't make me think - keeping exclusively to a higher level of abstraction means not presenting the reader with statements whose purpose they have to decipher themselves. A function call is self documenting, because the function name should describe what the function does.
 def isUserValid(user: 'User') -> bool:
     return isUnique(user) and isValidPassword(user.password) and isValidEmail(user.email) and isAdult(user.dob)
-#   
-def makeBreakfast():
+
+def makeBreakfast_Bad():
     cook()
-    #   Bad:
     plate_wife.give(fryingPan.getServing(20))
     plate_husband.give(fryingPan.getServing(80))
-    #   Fixed:
+def makeBreakfast_Fixed():
+    cook()
     serve()
-#
+
 #   Example: mixed levels of abstraction
-def MarkdownPost_MixedAbstraction(resource: 'Resource'):
+def MarkdownPost_MixedAbstraction_Bad(resource: 'Resource'):
     data = parseResource(resource)
     metaData = extractResourceMetaData(parsedResource)
-    #   Bad:
     url = "/" + resource.getFileName().replace(EXTENSION, "")
-    #   Fixed:
+def MarkdownPost_MixedAbstraction_Fixed(resource: 'Resource'):
+    data = parseResource(resource)
+    metaData = extractResourceMetaData(parsedResource)
     url = urlForResource(resource)
 def urlForResource(resource: 'Resource') -> str:
     return "/" + resource.getFileName().replace(EXTENSION, "")
 
 
+
 #	Rule 4: The Stepdown Rule
 #	Caller functions should reside above callee functions - code should read like a top-down narrative, higher levels of abstraction above lower ones. (Where a function is used by multiple caller functions, place it below the last caller). Justification: when reading one function, people are more likely to refer-to its callee functions than to other similar functions.
-#
+
 #   Example: Grouping similar functions vs grouping 
 #       class Bad():
 #			public void MakeBreakfast()
@@ -140,12 +146,14 @@ def urlForResource(resource: 'Resource') -> str:
 #			private void cleanup()
 
 
+
 #	Rule 5: Descriptive names
 #   A name should describe what a function does. A function should do what its name implies.
 #   Use a naming convention makes multiple word names readable: camelCase / snake_case / <?>
 #   A long descriptive name is better than a short enigmatic name, or a descriptive comment.
 #   Spend some time chosing a name. Be prepared to replace a name with a better one.
 #   Be consistent with naming. Use the same phrases / nouns / verbs for both functions and modules.
+
 
 
 #	Rule 6: Have No Side Effects
@@ -156,7 +164,7 @@ def urlForResource(resource: 'Resource') -> str:
 #   Temporal coupling: time related dependency, when something can be run.
 #   Where temporal couplings are necessary, it should be apparent in the function name.
 #   Ongoing: 2022-05-30T23:15:51AEST Have no side effects (rule 6) and functional programming (is the way to do it?) 
-#
+
 #   LINK: https://www.yld.io/blog/the-not-so-scary-guide-to-functional-programming/
 #   Functional programming: 
 #           keeping buisness logic as pure functions and moving side effects to the edges of our process.
@@ -164,6 +172,7 @@ def urlForResource(resource: 'Resource') -> str:
 #           a function can be replaced with its result (and vice-versa) without incuring side effects.
 #   Replacing loops: 
 #           map() / filter() / reduce()
+
 
 
 #	Rule 7: Command Query Separation
@@ -177,36 +186,38 @@ def urlForResource(resource: 'Resource') -> str:
 #               setAttribute('username', 'bob')
 
 
+
 #	Rule 8: Prefer Exceptions to Error Codes:
 #   Returning error codes is a violation of command-query-separation.
 #   Exceptions allow error processing code to be separated from logic.
 #   Doing so leads to messy deeply nested structures, since the caller must deal with any error immediately.
 #   Extract bodies of try-catch block into its own function, allowing complete separation of error handling and logic, and preserving Rule 2: 'Do One Thing'.
 
-#   Example: use of error codes vs use of exceptions
-def HandleDeletePage_ErrorCodes(path):
-    if deletePage(page) == E_OK:
-        if registery.deleteReference(page.name) == E_OK:
-            if configKeys.deleteKey(page.name.makeKey()):
-                logging.debug('done delete')
-            else:
-                logging.error('failed to delete key')
-        else:
-            logging.error('failed to delete reference')
-    else:
-        logging.error('failed to delete page')
+class ErrorCodes_vs_Exceptions:
 
-#   note that implementation / error-handling are seperate functions (Rule 2)
-def HandleDeletePage_Exceptions(path):
-    try:
-        PerformDeletePage(page)
-        logging.debug('done delete')
-    except Exception as e:
-        logging.error(e)
-def PerformDeletePage(path):
-    deletePage(page)
-    registery.deleteReference(page.name)
-    configKeys.deleteKey(page.name.makeKey())
+    def HandleDeletePage_ErrorCodes(path):
+        if deletePage(page) == E_OK:
+            if registery.deleteReference(page.name) == E_OK:
+                if configKeys.deleteKey(page.name.makeKey()):
+                    logging.debug('done delete')
+                else:
+                    logging.error('failed to delete key')
+            else:
+                logging.error('failed to delete reference')
+        else:
+            logging.error('failed to delete page')
+    
+    #   recall, a function should do one thing (error handling is one thing)
+    def HandleDeletePage_Exceptions(path):
+        try:
+            PerformDeletePage(page)
+            logging.debug('done delete')
+        except Exception as e:
+            logging.error(e)
+    def PerformDeletePage(path):
+        deletePage(page)
+        registery.deleteReference(page.name)
+        configKeys.deleteKey(page.name.makeKey())
 
 
 #	Rule 9: Don't Repeat Yourself
@@ -215,7 +226,7 @@ def PerformDeletePage(path):
 
 
 #   Rule 10: Switch-like statements
-#   There should only be one declaration of such a statement - buried in an AbstractFactory class which returns an appropriate polymorphic objects to handle whatever specific behaviour is required for a given input.
+#   If needed, they should only be written once - buried in an AbstractFactory class which returns an appropriate polymorphic objects to handle whatever specific behaviour is required for a given input.
 #   <(Must grow as new options are added (violation of Open Closed Principle))>
 #   <(More than one reason for it to change(?) (violation of Simple Responsibility Principle))>
 #   {{{
@@ -291,32 +302,32 @@ def EmployeeFactory(r: 'EmployeeRecord'):
 #           Keyword form: encode the names of arguments into the function name
 #                   writeField(name)
 #                   assertExpectedEqualsActual(expected, actual)
-#
+
 #       Flag arguments: Implies function does two things / there should be two functions. Ugly. 
 #           Instead of: 
 #                   render(multiple_tests)
 #           Split into two functions:
 #                   renderForSingleTest()
 #                   renderForMultipleTests()
-#
+
 #       Argument objects:
 #           Where arguments are related, they should be wrapped into a class of their own.
 #           Bad:
 #                   makeCircle(x, y, r)
 #           Instead:
 #                   makeCircle(center, r)
-#
+
 #       Argument lists:
 #           Variadic functions take a variable number of arguments.
 #           They still should be restricted to monad/dyad/triad form:
 #                   monad(Integer... args)
 #                   dyad(String name, Integer... args)
 #                   triad(String name, int count, Integer... args)
-#
+
 #	    Output Arguments:
 #	        Arguments are naturally interpreted as inputs to a function. Strongly prefer return for function outputs.
 #           If a function must change the state of something, make it the state of its owning object.
-#
+
 #       Monadic (1 arg):
 #           Asking a question about an argument
 #                   bool fileExists(path)
@@ -347,9 +358,11 @@ def EmployeeFactory(r: 'EmployeeRecord'):
 #                   assertEquals(message, expected, actual)
 
 
+
 #	Structured Programming:
 #   Dijkstra's rule of structured programming: every block should have one entry/exit.
 #   A rule that becomes more important the larger a block/function becomes.
+
 
 #	How To Approach Writing Functions:
 #	First draft code is by nature clumsy and disorganized. Write this code to pass all relevant unit tests, then (applying code-craft principles), refactor and reorganize while continuing to ensure tests pass.
@@ -362,9 +375,9 @@ def EmployeeFactory(r: 'EmployeeRecord'):
 #	{{{
 #	Reading Code from Top to Bottom: The Stepdown Rule
 #	Code should read like a top-down narrative. Every method should be followed by those at the next level of abstraction so that we can read the program, descending one level of abstraction at a time as we read down the list of methods. I call this The Stepdown Rule.
-#	
+
 #	To say this differently, we want to be able to read the program as though it were a set of "To" paragraphs, each of which is describing the current level of abstraction and referencing subsequent TO paragraphs at the next level down.
-#	
+
 #	To do A we do B and then C.
 #	To do B, if E we do F and otherwise we do G
 #	To determine if E, we ...
@@ -373,18 +386,18 @@ def EmployeeFactory(r: 'EmployeeRecord'):
 #	To do B we...
 #	To do C we...
 #	Learning to think this way is very important. It is the key to keeping methods short and making sure they do "one thing." Making the code read like a top-down set of TO paragraphs is an effective technique for keeping the abstraction level consistent.
-#	
+
 #	Dependent methods: If one method calls another, they should be vertically close in the source file, and the caller should be above the callee where possible. This gives the program a natural flow and enhances the readability of the whole module.
-#	
+
 #	The Newspaper Metaphor
 #	Think of a well-written newspaper article. You read it vertically.
-#	
+
 #	At the top you see a headline that will:
-#	
+
 #	tell you what the story is about
 #	allow you to decide if you want to read it.
 #	The first paragraph gives you a synopsis of the whole story which:
-#	
+
 #	Hides all the details
 #	Gives you the broad-brush concepts.
 #	As you continue downward, the details increase until you have all the dates, names, quotes, claims, and other minutia.
