@@ -1,9 +1,9 @@
+#   {{{3
 #   vim: set tabstop=4 modeline modelines=10:
 #   vim: set foldlevel=2 foldcolumn=2 foldmethod=marker:
+#   {{{2
 import sys
 import os
-#   {{{2
-#   Ongoing: 2022-06-10T01:52:42AEST the 'Visitor' pattern
 
 #   English Terminology:
 #   {{{
@@ -35,7 +35,7 @@ import os
 #   {{{
 #           articles:		                the/a/an 
 #           demonstratives:		            this/that 
-#           possesive determiners:		    my/their 
+#           possessive determiners:		    my/their 
 #           quantifiers:		            many/all/no 
 #           distributive:		            each/any
 #           interrogative:		            which
@@ -47,7 +47,7 @@ import os
 #   collective noun: a group taken as a whole
 #           choir, galaxy
 
-#   transitive verb: verb that requires an object to recieve the action
+#   transitive verb: verb that requires an object to receive the action
 #   direct noun: noun that is directly affected by action of a verb
 
 #   <>
@@ -77,17 +77,22 @@ import os
 
 #   'table' should never appear in a table name. 'object' should never appear in an object name.
 
+
 #   The length of a name should correspond to the size of its scope.
 #   Names should be easy to search in a body of text.
+
 
 #   Avoid literal constant values. Use named variable instead.
 #   Avoid names that place any extra mental burden on the reader. 
 #   Single letter names are a poor choice in most contexts.
 #   Clarity is king. Say what you mean. Mean what you say.
 
-#   Interfaces and Implementations: (suggestion), leave interface unadorned.
+
+#   Interfaces and Implementations: (suggestion), where this is only 1 implementation, leave interface unadorned.
 #           interface:          ShapeFactory
 #           implementation:     ShapeFactoryImpl
+#   On the other hand, implementations could be called `SquareFactory`, `CircleFactory`, ect.
+
 
 #   Class Names: nouns or noun-phrases. Not a verb.
 #   Start with upper, camelCase.
@@ -96,6 +101,7 @@ import os
 #           Account
 #           AddressParser
 
+
 #   Method names: verb or verb-phrase
 #   Start with lower, camelCase
 #           postPayment
@@ -103,6 +109,7 @@ import os
 #           save
 #   Use get/set/is for accessors/mutators/predicates. Use the same word to describe the same action each time.
 #   <(Verb-phrase: a verb and its arguments, excluding the subject noun)>
+
 
 #   Variables: python advises snake_case for variables (to differentiate them from classes/methods)
 #   snake_case is arguably easier to read.
@@ -113,88 +120,101 @@ import os
 #           MAX_COUNT
 #           USER_NAME_FIELD
 
+
 #   Make overloaded constructors private, and create static factory methods with names describing the arguments:
 #           auto p = Complex.FromRealNumber(23.0)
 
+
 #   Don't use multiple different words for the same concept. Don't use the same word for two different concepts. Don't use similar words interchangeably. Be consistent. 
 
-#   Prefer solution domain names to problem domain names. Use technical names as appropriate.
 #   Separate problem and solution domain concepts.
+#   Prefer solution domain names to problem domain names. Use technical names as appropriate.
+#   Problem domain: customerOrder, flightNumber, productInventory
+#   Solution domain: stringBuffer, hashMap, httpRequest
+
 
 #   Enclose names in a meaningful context. Don't add redundant/irrelevant context. 
 
+
 #   'Address' is a suitable name for a class where it is not necessary to distinguish between types of addresses. 'PostalAddress' / 'MAC' / 'URL' are suitable class names to distinguish between types of addresses.
+
 
 #   Put the most important word on the left:
 #           Bad         Push this button to lift the exit gate
 #           Good        To lift the exit gate, push this button
 
+
 #   Defer to guidelines of language in question.
 
 
-#   Prefer 'Modifier-Subject', but use 'Subject-Modifier' wherever it is more readable
+#   Prefer 'Modifier-Subject', but use 'Subject-Modifier' wherever it is more readable:
 #   LINK: https://softwareengineering.stackexchange.com/questions/160370/order-of-subject-and-modifiers-in-variable-names
 #   {{{
-#   <(We come here asking: count_written or written_count?)>
-#   <(If we (might) have multiple count_, that is the subject, if we have multiple written_, that is the subject?)>
-#   <(If we have multiple of neither [...] 'count' is the subject?)>
+#   What is the subject and what is the modifier? The subject is the primary concept. 
 
-#   Questions to ask: What is the subject and what is the modifier?
-#   <>
+#   Modifier-subject is generally a more natural way of reading names
+#   'AdjustedArea' implies an area that has been adjusted
+#   'AreaAdjusted' implies a type of adjustment that applies specifically to areas
 
-#   Subject-Modifier:           Modifier-Subject: (usually better)
-#       AreaAdujusted               AdujstedArea
-#       AreaInnerSurface            SurfaceAreaInner
-#       AreaOuterSurface            SurfaceAreaOuter
-#   In this case, both are bad: use Area[region] instead
+#   There are exceptions: `ageUser` is less natural than `userAge`
+#   (in this case, a better choice might be `user.age`)
+
 
 #   Assertions: 
-#   Modifier-Subject, (since that is generally better English) unless Subject-Modifier is better English.
+#   Modifier-Subject is usually better English 
 #   Subject-Modifier is something designers do only to satisfy IntelliSense.
 #   Having difficulty with long lists in intellisense isn't a variable naming problem, it's a class size problem. 
 #   Never use a particular coding convention only to satisfy your programming environment.
 #   Use the word order you'd use when writing it in normal English. If you have multiple such prefixed properties, fields (and methods), consider putting those members together in a related class
 
-#   Which is the modifier: wallThickness
-#           If working with walls, 'thickness' is the modifier (and varname should be 'thicknessWall')
-#           If working with thicknesses, 'wall' is the modifier 
+
+#   wallThickness vs thicknessWall
+#   If working with walls, 'thickness' is the modifier (and varname should be 'thicknessWall')
+#   If working with thicknesses, 'wall' is the modifier 
+
 
 #   There is no always-best-option, consider:
 #   Which order is most likely to leave the reader with the correct purpose of the variable?
-#   Which order is better english?
+#   Which order is better English?
 
-#   Consider: timeStart vs startTime
-#   (We presumedly must also have endTime, elapsedTime)
-#   <(We are working with times, hence 'start' is the modifier)>
-#   
 
-#   As a general rule 'written_count' is the better variable name ... in this case, I contend 'count_written' is better
+#   timeStart vs startTime
+#   Here 'time' is the subject, and 'startTime' the better variable name
+#   (We presumably must also have endTime, elapsedTime)
+
 #   }}}
+#   Example: `count_written` vs `written_count`
+#   Which is the subject depends on context, what other variables are involved
+#   'count' is the subject: `written_count`, `read_count`, `processed_count`
+#   'written' is the subject: `count_written`, `time_written`, `errors_written`
+#   In isolation, 'count' is the subject, chose `written_count`
 
 
+#   camelCase vs snake_case:
 #   LINK: https://dev.to/somedood/a-grammar-based-naming-convention-13jf
 #   {{{
 #   Prefer camelCase to snake_case
 
-#   Use SCREAMING_CASE for contants
+#   Use SCREAMING_CASE for constants
 #   A true constant is a static value that does not depend on runtime values
 
-#   Name indervidual objects with the most apropriate singular noun
+#   Name individual objects with the most appropriate singular noun
 
 #   Booleans should be prefixed with is/has/can/similar
 
 #   Arrays/containers should be named a plural noun, or a collective noun if that is more readable
 
 #   Functions: A verb, or verb + noun (where the verb/noun pair refer to each other)
-#           GetProccess()
-#           WhereObject()
-#           MeasureObject()
+#           getProccess()
+#           whereObject()
+#           measureObject()
 
 #   Class: Proper noun in PascalCase
 
-#   Fields: As per variables
 #   Methods: omit noun of 'verb+noun' pair where object name fills its place
 
+#   Fields: As per variables
+#   }}}
 #   Example:
 #       const TRUE_CONSTANT = Math.PI;
 #       const stringName = '';
@@ -205,9 +225,9 @@ import os
 #       function getFunctionName() { }
 #       class ClassName { }
 
-#   }}}
 
-
+#   S-I-D: Short, intuitive, descriptive
+#   (P)A/HC/LC: prefix + action + high-context + low-context
 #   LINK: https://github.com/kettanaito/naming-cheatsheet
 #   {{{
 #   Use English
@@ -243,18 +263,12 @@ import os
 #   
 #   high context: emphasizes the meaning of a variable
 #   low context: <?>
-#
+#   }}}
+#   Examples:
 #       Name:                   Prefix      Action (A)      High-context (HC)       Low-context (LC)
 #       getPost                             get             Post
 #       getPostData                         get             Post                    Data
 #       handleClickOutside                  handle          Click                   Outside
 #       shouldDisplayMessage    should      Display         Message
-
-#   }}}
-
-
-#   LINK: https://en.wikipedia.org/wiki/Naming_convention_(programming)
-#   {{{
-#   }}}
 
 
