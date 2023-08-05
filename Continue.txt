@@ -16,5 +16,5 @@ object-design-style-guide:
 2023-06-28T18:55:42AEST leetcode; oop-top-interview-questions (empty item)
 
 design-patterns-tutorial-point
-2023-08-05T19:59:01AEST code-craft; design-patterns-tutorial-point
+2023-08-05T19:59:01AEST code-craft; design-patterns
 
