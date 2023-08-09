@@ -2,6 +2,7 @@
 #   vim: set tabstop=4 modeline modelines=10:
 #   vim: set foldlevel=2 foldcolumn=2 foldmethod=marker:
 #   {{{2
+from abc import ABC, abstractmethod
 
 #   Ongoing:
 #   {{{
@@ -10,6 +11,11 @@
 #   2023-08-09T16:33:50AEST lessons from the `Sql` class before/after case study ... how the `Where` / `ColumnsList` class fall into implementation ... how to reconcile use of inheritance with the ((strongly) prefer composition over inheritance) principle? [...] (the Open/Closed principle implies the use of inheritance?)
 #   2023-08-09T17:26:47AEST interface classes and private methods, interface classes and providing <default/mandatory> implementations
 #   2023-08-09T17:34:12AEST Liskov Substitution principle - governs design of base/derived classes, design of functions receiving base/derived objects (or both)
+#   2023-08-09T19:42:49AEST applying the interface segregation principle to inheritance from non-interface classes
+#   2023-08-09T19:53:45AEST single responsibility principle - how to know when the purpouse of a class includes an 'and' - consider the `ReportGenerator` example, it is easily possible to come up with a definition "create a report" instead of the "generate the contents of a report and output it in the desired format" that suggests it needs to be split into multiple classes(?)
+#   2023-08-09T19:56:31AEST other topics related to the single responsibility principle (by wikipedia): GRASP, seperation of concerns, and the chain of responsibility pattern
+#   2023-08-09T20:17:12AEST BasicCoffeeMachine/FancyCoffeeMachine example - the use of interface classes allows us to use either in a typed language - what purpouse does this serve in a dynamic language like python(?) [...] which of the SOLID principles talks about the need for interface classes(?) [...] we can write a function dependent on ICoffeeMachine instead of on BasicCoffeeMachine/FancyCoffeeMachine(?) [...] (in this example, presumedly `BasicCoffeeMachine` is the low-level module, the high level module is whatever calls it, and `ICoffeeMachine` is neither the high-or-low level module but instead the talked-about abstraction between them?)
+#   2023-08-09T20:20:38AEST dependency injection (as opposed to dependency inversion)(?)
 #   }}}
 
 #   The Java convention is to begin a class with a list of variables
@@ -68,6 +74,7 @@
 #   Single Responsibility Principle:
 #   A class should have only one responsibility - there should be only one reason for it to change
 #   Ask: what is the responsibility of the class. If the answer includes the word 'and', the class is probably breaking the single responsibility principle
+#   Example: a class, `ReportGenerator`, might have two reasons to change - the content of the report needs to be changed, or the format for the report needs to be changed - suggesting its functionality should be split into `ReportContent` and `ReportWriter` classes
 #   <>
 
 
@@ -96,13 +103,67 @@
 
 
 #   Interface Segregation:
+#   Clients should not be forced to depend on methods they do not use
+#   Interfaces should not be so large that classes that implement them inherit unwanted methods
+#   [{no code should depend on methods it does not use}]
+#   An interface class my be violating the interface segregation principle if:
+#           - the interface is excessively large
+#           - implementations contain unimplemented or unneeded methods
+#           - implementations require us to pass null/equivalent as arguments
+#   Solutions:
+#           - split large interfaces into smaller ones (inheritting from multiple interfaces if required)
+#           - (see 'adaptor pattern')
 #   <>
 
 
 #   Dependency Inversion:
+#   1) High level modules should not depend on low level modules, both should depend on abstractions
+#   2) Abstractions should not depend on details, details should depend on abstractions
+#   (high/low level refers to level of abstration of the modules in question)
+#   [{put another way, high level modules should depend on interfaces, and low level modules should implement those interfaces(?)}]
+#   (contention: code that follows the open/closed principle and liskov substitution principle should also follow the dependency inversion principle)
+#   <>
+#
+#   Example: BasicCoffeeMachine/FancyCoffeeMachine
+#   {{{
+class ICoffeeMachine(ABC):
+    @abstractmethod
+    def brewFilterCoffee(self):
+        raise NotImplementedError()
+
+class IEspressoMachine(ABC):
+    @abstractmethod
+    def brewEspresso(self):
+        raise NotImplementedError()
+
+class BasicCoffeeMachine(ICoffeeMachine):
+    def brewFilterCoffee(self):
+        return "Basic drip coffee"
+
+class FancyCoffeeMachine(ICoffeeMachine, IEspressoMachine):
+    def brewFilterCoffee(self):
+        return "Fancy drip coffee"
+    def brewEspresso(self):
+        return "Fancy espresso coffee"
+
+def test_Coffee_Example():
+    b = BasicCoffeeMachine()
+    f = FancyCoffeeMachine()
+    assert b.brewFilterCoffee() == "Basic drip coffee"
+    assert f.brewFilterCoffee() == "Fancy drip coffee"
+    assert f.brewEspresso() == "Fancy espresso coffee"
+#   }}}
+test_Coffee_Example()
+
+
+#   Adaptor pattern:
 #   <>
 
 
 #   The visitor pattern:
+#   <>
+
+
+#   Summary:
 #   <>
 
