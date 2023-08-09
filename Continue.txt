@@ -17,6 +17,7 @@ object-design-style-guide:
 
 clean-code:
 2023-08-09T15:40:50AEST code-craft; clean-code; 06-objects-and-data-structures; fluent interfaces
+2023-08-09T15:51:30AEST code-craft; clean-code; 07-error-handling; when exceptions can't be used
 
 design-patterns-tutorial-point
 2023-08-05T19:59:01AEST code-craft; design-patterns
