@@ -23,3 +23,5 @@ clean-code:
 design-patterns-tutorial-point
 2023-08-05T19:59:01AEST code-craft; design-patterns
 
+solid-principles:
+2023-08-09T19:21:07AEST code-craft; solid-principes; code examples for each principle
