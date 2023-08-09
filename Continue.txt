@@ -15,6 +15,9 @@ object-design-style-guide:
 2023-04-13T23:10:09AEST extra/inheritance, traits and dependency injection
 2023-06-28T18:55:42AEST leetcode; oop-top-interview-questions (empty item)
 
+clean-code:
+2023-08-09T15:40:50AEST code-craft; clean-code; 06-objects-and-data-structures; fluent interfaces
+
 design-patterns-tutorial-point
 2023-08-05T19:59:01AEST code-craft; design-patterns
 
