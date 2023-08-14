@@ -126,6 +126,7 @@ from abc import ABC, abstractmethod
 #
 #   Example: BasicCoffeeMachine/FancyCoffeeMachine
 #   {{{
+#   We define a seperate interface class for each type of functionality we require, with each implementation class inheriting those interfaces it [{requires/implements}]
 class ICoffeeMachine(ABC):
     @abstractmethod
     def brewFilterCoffee(self):
@@ -156,11 +157,20 @@ def test_Coffee_Example():
 test_Coffee_Example()
 
 
+
+#   Interface (abstract) classes:
+#   <>
+
+
 #   Adaptor pattern:
 #   <>
 
 
 #   The visitor pattern:
+#   <>
+
+
+#   Fluent interfaces:
 #   <>
 
 
