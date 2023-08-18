@@ -170,6 +170,10 @@ test_Coffee_Example()
 #   <>
 
 
+#   The command pattern:
+#   <>
+
+
 #   Fluent interfaces:
 #   <>
 
