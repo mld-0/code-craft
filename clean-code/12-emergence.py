@@ -25,6 +25,7 @@ import tempfile
 
 
 #   Template method pattern:
+#   (A technique for removing higher-level duplication)
 #   Define a superclass for the algorithm we wish to represent
 #   The template method is the method that defines the algorithm as a series of steps, each provided by a helper method. 
 #   Helper methods may be implemented, or left as abstract to be provided by subclasses as appropriate
@@ -32,7 +33,7 @@ import tempfile
 #   Example: `TableReader` class 
 #   {{{
 #   Interface class:
-class TableReader():
+class TableReaderInterface():
     def read(self, path):
         f = self.openFile(path)
         buffer = self.readFile(f)
@@ -54,7 +55,7 @@ class TableReader():
         return [ [ parse_cell(cell) for cell in row ] for row in data ]
 
 #   Implementation:
-class CSVReader(TableReader):
+class CSVReader(TableReaderInterface):
     def openFile(self, path):
         return open(path, 'rt')
     def readFile(self, f):
@@ -86,4 +87,18 @@ test_CSVReader()
 #   }}}
 
 
+#   Expressive:
+#   Make a deliberate effort to write code that is as self-documenting as possible.
+#   Choose good names. Keep functions and classes small. 
+#   Use design-pattern names (eg: 'Command', 'Visitor') in the names of classes that use those patterns.
+#   Well written tests act as documentation-by-example
+
+
+#   Minimal classes and methods:
+#   Don't bloat the overall size of the project by taking code-craft principles too far. 
+#   There is a balance between keeping methods/classes small, and allowing the number of them to explode.
+
+
+#   Summary:
+#   <>
 
