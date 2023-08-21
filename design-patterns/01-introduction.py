@@ -8,6 +8,7 @@ import math
 #   {{{
 #   2023-08-21T20:22:29AEST so far in the introduction, they have stated that most techniques given here use inheritance in some form ... then go-on to restate (calling it the 'second principle of OO design': "Favour object composition over class inheritance") ... (do we need some item on when inheritance is in-fact called for (square that with Rust's efforts to discourage traditional inheritance?)) 
 #   2023-08-21T20:32:31AEST if the second principle of OO design is "prefer composition over inheritance" - what was the first (that we missed?)
+#   2023-08-21T22:32:57AEST dynamic binding (virtual functions?) ... as opposed to static binding (which is inheritance?)
 #   }}}
 
 #   A Design Pattern has 4 elements:
@@ -34,8 +35,7 @@ import math
 #                                                                           Strategy
 #                                                                           Visitor
 
-#   Aspects that we can vary:
-#
+#   Aspects that Pattern allows us to vary:
 #   Abstract Factory                families of product objects
 #   Builder                         how a composite object gets created
 #   Factory Method                  subclass of object that is instantiated
@@ -67,16 +67,72 @@ import math
 #   How Design Patterns solve Design Problems
 #
 #   Finding appropriate objects:
-#   <>
+#   OO design can be difficult and lead to classes that have no counterpart in the real world
+#   Design patterns can help identify less-obvious abstractions and the objects that can capture them
 #
 #   Determining object granularity:
-#   <>
+#   Several design patterns help with this problem:
+#       - Facade describes how to represent complete systems as objects
+#       - Flyweight describes how to support large numbers of objects at the finest granularities
+#       - Abstract Factory and Builder describe objects for creating other objects
+#       - Visitor/Command describe objects which implement requests for another object
 #
 #   Specifying object interfaces:
-#   <>
-#   
+#   Methods define operations an object may perform.
+#   A methods signature is defined by its name, parameters, and return value [{and scope?}]
+#   An objects interface is the set of signatures it makes available to perform operations
+#   An object is a subtype of an another if its interface contains the interface of that supertype
+
+#   Dynamic binding: (polymorphism) use of different objects supporting the same interface interchangeably, with the implementation to call being determined at runtime
+
+
+  
 #   Specifying object implementations:
+#   An objects implementation is defined by its class (which specifies representation, internal data, and operations)
+#   Objects are created by instantiating a class, creating an instance of that class.
+ 
+#   OMT notation: 
+#   {{{
+#   (see pg 15)
+#           instance of: dashed arrow 
+#           subclass of: vertical line w/ triangle
+#           implementation: dog-eared box connected by dashed line
+#   }}}
+
+
+#   Abstract classes are classes that cannot be instantiated, they provide common interfaces, by delegating some or all of their functionality to derived classes
+#
+#   Concrete classes are classes with no abstract methods
+#
+#   Mixin class: a class which is intended to provide an additional interface to an existing derived class through multiple inheritance
+#   {{{
+class Parent:
+    def hello(self):
+        return "Hello World"
+class Mixin:
+    def goodbye(self):
+        return "Goodbye"
+class AugmentedChild(Parent, Mixin):
+    ...
+def test_AugmentedChild():
+    ac = AugmentedChild()
+    assert ac.hello() == "Hello World"
+    assert ac.goodbye() == "Goodbye"
+test_AugmentedChild()
+#   }}}
+
+
+#   Class versus Interface and Inheritance:
+#   An objects class defines its implementation
+#   An objects type defines its interface
+#   [{some languages make this distinction regarding inheritance}]
+#
+#   Program to an interface, not an implementation:
+#   [{Polymorphism depends on interface sharing via inheritance}]
+#   Benefits of manipulating objects solely in terms of abstract interfaces:
+#       -   Clients remain unaware of the specific types and implementations of the objects they use, as long as those objects all adhere to the interface
 #   <>
+#   See: Abstract Factory, Builder, Factory Method, Prototype, and Singleton
 
 
 #   Inheritance vs Composition:
@@ -134,7 +190,7 @@ test_Window_area()
 
 
 #   Parameterized Types:
-#   Use of a variable type parameter
+#   (Templates) Use of a variable type parameter
 #   A powerful third alternative to class-inheritance/object-composition
 
 
@@ -143,8 +199,11 @@ test_Window_area()
 #   <>
 
 
-#   Common causes of redesign, with relevant Design Patterns:
-#   1)  Creating an object by specifying a class explicitly: Specifying a class name when creating an object commits one to a particular implementation instead of a particular interface. To avoid it, create objects indirectly. See: Abstract Factory, Factory Method, Prototype
+#   Designing for change:
+#   Common causes of redesign, with relevant Design Patterns
+#   1)  Creating an object by specifying a class explicitly: 
+#       Specifying a class name when creating an object commits one to a particular implementation instead of a particular interface. To avoid it, create objects indirectly. 
+#       See: Abstract Factory, Factory Method, Prototype
 #   2)  
 
 
