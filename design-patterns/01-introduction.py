@@ -9,6 +9,9 @@ import math
 #   2023-08-21T20:22:29AEST so far in the introduction, they have stated that most techniques given here use inheritance in some form ... then go-on to restate (calling it the 'second principle of OO design': "Favour object composition over class inheritance") ... (do we need some item on when inheritance is in-fact called for (square that with Rust's efforts to discourage traditional inheritance?)) 
 #   2023-08-21T20:32:31AEST if the second principle of OO design is "prefer composition over inheritance" - what was the first (that we missed?)
 #   2023-08-21T22:32:57AEST dynamic binding (virtual functions?) ... as opposed to static binding (which is inheritance?)
+#   2023-08-22T20:48:59AEST in the context of a 'Builder' what is meant by 'representation'?
+#   2023-08-22T20:52:10AEST plz revisit 'Brief Descriptions' (of each design pattern) upon completion of <article/items> for each
+#   2023-08-22T21:19:59AEST rephrase the 'allows us to vary' definition (and update the definitions accordingly) (again, upon completion of <article/items> for each) [...] (and do a sanity-check that these definitions (and the definition-definitions) actually correspond with the write patterns)
 #   }}}
 
 #   A Design Pattern has 4 elements:
@@ -35,38 +38,87 @@ import math
 #                                                                           Strategy
 #                                                                           Visitor
 
-#   Aspects that Pattern allows us to vary:
-#   Abstract Factory                families of product objects
-#   Builder                         how a composite object gets created
-#   Factory Method                  subclass of object that is instantiated
-#   Prototype                       class of object that is instantiated
-#   Singleton                       the sole instance of a class
-#   
-#   Adapter                         interface to an object
-#   Bridge                          implementation of an object
-#   Composite                       structure and composition of an object
-#   Decorator                       responsibilities of an object without subclassing
-#   Facade                          interface to a subsystem
-#   Flyweight                       storage costs of objects
-#   Proxy                           how an object is accessed; its location
-#   
-#   Chain of Responsibility         object that can fulfill a request
-#   Command                         when and how a request is fulfilled
-#   Interpreter                     grammar and interpretation of a language
-#   Iterator                        how an aggregate's elements are accessed, traversed
-#   Mediator                        how and which objects interact with each other
-#   Memento                         what private information is stored outside an object, and when
-#   Observer                        number of objects that depend on another object; how the dependent objects stay up to date
-#   State                           states of an object
-#   Strategy                        an algorithm
-#   Template Method                 steps of an algorithm
-#   Visitor                         operations that can be applied to object(s) without changing their class(es)
 
+#   Brief Descriptions:
+#   (Creational)
+#   Abstract Factory: 
+#       an interface for creating families of objects without specifying their concrete class
+#       allows us to vary families of product objects
+#   Builder: 
+#       separate construction of object from its representation (allowing the same process to create different representations)
+#       allows us to vary how a composite object gets created
+#   Factory Method: 
+#       interface for creating objects that allows subclasses decide which class to instantiate
+#       allows us to vary the subclass of the object instantiated
+#   Prototype: 
+#       create new objects according to the type of a supplied 'prototype' object
+#       allows us to vary the class of the object instantiated
+#   Singleton: 
+#       ensure a class has only one instance, and provide a global point of access to it
+#       allows us to vary the sole instance of a class
+#
+#   (Structural)
+#   Adapter: 
+#       convert the interface of a class into another interface the client is expecting
+#       allows us to vary the interface to an object
+#   Bridge: 
+#       decouple an abstraction from its implementation
+#       allows us to vary the implementation of an object
+#   Composite: 
+#       compose objects into tree structures to represent hierarchies (allows clients to treat compositions of objects uniformly)
+#       allows us to vary the structure and composition of an object
+#   Decorator: 
+#       attach additional responsibilities to objects dynamically (flexible alternative to subclassing)
+#       allows us to vary responsibilities of an object without subclassing
+#   Facade: 
+#       provide a unified interface to a set of subsystem interfaces
+#       allows us to vary our interface to a subsystem
+#   Flyweight: 
+#       use sharing to support large numbers of fine-grained objects efficiently
+#       allows us to vary storage costs of objects
+#   Proxy: 
+#       placeholder for another object to control access to it
+#       allows us to vary an object is accessed; it's location
+#
+#   (Behavioural)
+#   Chain of Responsibility: 
+#       allow multiple objects a chance to handle the sender's request
+#       allows us to vary the objects that can fulfill a request
+#   Command: 
+#       encapsulate a request an object (allowing <>)
+#       allows us to vary when and how a request is fulfilled
+#   Interpreter: 
+#       a representation for a language's grammar, interpretor for that language
+#       allows us to vary grammar and interpretation of a language
+#   Iterator: 
+#       provide access to elements of an underlying object sequentially
+#       allows us to vary how an aggregate's elements are accessed, traversed
+#   Mediator: 
+#       object which encapsulates how a set of objects interact (promoting loose coupling)
+#       allows us to vary how and which objects interact with each other
+#   Memento: 
+#       capture/save/restore an object's internal state (without violating encapsulation)
+#       allows us to vary what private information is stored outside an object, and when
+#   Observer: 
+#       notify/update all dependencies of an object when that object changes
+#       allows us to vary which objects depend on another; how the dependent objects stay up-to-date
+#   State: 
+#       allow an object to change behaviour (appear to change class) when it's internal state changes
+#       allows us to vary [{states of an object}]
+#   Strategy: 
+#       encapsulate a family of algorithms, making them interchangeable
+#       allows us to vary [{our choice of}] <an> algorithm
+#   Template Method: 
+#       define an operation as class, with each step as a separate method, optionally delegating implementations to subclasses
+#       allows us to vary steps of an algorithm (per subclass)
+#   Visitor: 
+#       define a new operation on an existing class, without changing said class
+#       allows us to vary operations applicable to an object (without changing it's class)
 
 
 #   How Design Patterns solve Design Problems
 #
-#   Finding appropriate objects:
+#   Finding Appropriate Objects:
 #   OO design can be difficult and lead to classes that have no counterpart in the real world
 #   Design patterns can help identify less-obvious abstractions and the objects that can capture them
 #
