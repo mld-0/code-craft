@@ -11,7 +11,8 @@ import math
 #   2023-08-21T22:32:57AEST dynamic binding (virtual functions?) ... as opposed to static binding (which is inheritance?)
 #   2023-08-22T20:48:59AEST in the context of a 'Builder' what is meant by 'representation'?
 #   2023-08-22T20:52:10AEST plz revisit 'Brief Descriptions' (of each design pattern) upon completion of <article/items> for each
-#   2023-08-22T21:19:59AEST rephrase the 'allows us to vary' definition (and update the definitions accordingly) (again, upon completion of <article/items> for each) [...] (and do a sanity-check that these definitions (and the definition-definitions) actually correspond with the write patterns)
+#   2023-08-22T21:19:59AEST rephrase the 'variable:' definition (and update the definitions accordingly) (again, upon completion of <article/items> for each) [...] (and do a sanity-check that these definitions (and the definition-definitions) actually correspond with the write patterns)
+#   2023-09-01T20:05:57AEST elaborate on tight vs loose coupling
 #   }}}
 
 #   A Design Pattern has 4 elements:
@@ -43,77 +44,77 @@ import math
 #   (Creational)
 #   Abstract Factory: 
 #       an interface for creating families of objects without specifying their concrete class
-#       allows us to vary families of product objects
+#       variable: families of product objects
 #   Builder: 
 #       separate construction of object from its representation (allowing the same process to create different representations)
-#       allows us to vary how a composite object gets created
+#       variable: how a composite object gets created
 #   Factory Method: 
 #       interface for creating objects that allows subclasses decide which class to instantiate
-#       allows us to vary the subclass of the object instantiated
+#       variable: the subclass of the object instantiated
 #   Prototype: 
 #       create new objects according to the type of a supplied 'prototype' object
-#       allows us to vary the class of the object instantiated
+#       variable: the class of the object instantiated
 #   Singleton: 
 #       ensure a class has only one instance, and provide a global point of access to it
-#       allows us to vary the sole instance of a class
+#       variable: the sole instance of a class
 #
 #   (Structural)
 #   Adapter: 
 #       convert the interface of a class into another interface the client is expecting
-#       allows us to vary the interface to an object
+#       variable: the interface to an object
 #   Bridge: 
 #       decouple an abstraction from its implementation
-#       allows us to vary the implementation of an object
+#       variable: the implementation of an object
 #   Composite: 
 #       compose objects into tree structures to represent hierarchies (allows clients to treat compositions of objects uniformly)
-#       allows us to vary the structure and composition of an object
+#       variable: the structure and composition of an object
 #   Decorator: 
 #       attach additional responsibilities to objects dynamically (flexible alternative to subclassing)
-#       allows us to vary responsibilities of an object without subclassing
+#       variable: responsibilities of an object without subclassing
 #   Facade: 
 #       provide a unified interface to a set of subsystem interfaces
-#       allows us to vary our interface to a subsystem
+#       variable: our interface to a subsystem
 #   Flyweight: 
 #       use sharing to support large numbers of fine-grained objects efficiently
-#       allows us to vary storage costs of objects
+#       variable: storage costs of objects
 #   Proxy: 
 #       placeholder for another object to control access to it
-#       allows us to vary an object is accessed; it's location
+#       variable: an object is accessed; it's location
 #
 #   (Behavioural)
 #   Chain of Responsibility: 
 #       allow multiple objects a chance to handle the sender's request
-#       allows us to vary the objects that can fulfill a request
+#       variable: the objects that can fulfill a request
 #   Command: 
 #       encapsulate a request an object (allowing <>)
-#       allows us to vary when and how a request is fulfilled
+#       variable: when and how a request is fulfilled
 #   Interpreter: 
 #       a representation for a language's grammar, interpretor for that language
-#       allows us to vary grammar and interpretation of a language
+#       variable: grammar and interpretation of a language
 #   Iterator: 
 #       provide access to elements of an underlying object sequentially
-#       allows us to vary how an aggregate's elements are accessed, traversed
+#       variable: how an aggregate's elements are accessed, traversed
 #   Mediator: 
 #       object which encapsulates how a set of objects interact (promoting loose coupling)
-#       allows us to vary how and which objects interact with each other
+#       variable: how and which objects interact with each other
 #   Memento: 
 #       capture/save/restore an object's internal state (without violating encapsulation)
-#       allows us to vary what private information is stored outside an object, and when
+#       variable: what private information is stored outside an object, and when
 #   Observer: 
 #       notify/update all dependencies of an object when that object changes
-#       allows us to vary which objects depend on another; how the dependent objects stay up-to-date
+#       variable: which objects depend on another; how the dependent objects stay up-to-date
 #   State: 
 #       allow an object to change behaviour (appear to change class) when it's internal state changes
-#       allows us to vary [{states of an object}]
+#       variable: [{states of an object}]
 #   Strategy: 
 #       encapsulate a family of algorithms, making them interchangeable
-#       allows us to vary [{our choice of}] <an> algorithm
+#       variable: [{our choice of}] <an> algorithm
 #   Template Method: 
 #       define an operation as class, with each step as a separate method, optionally delegating implementations to subclasses
-#       allows us to vary steps of an algorithm (per subclass)
+#       variable: steps of an algorithm (per subclass)
 #   Visitor: 
 #       define a new operation on an existing class, without changing said class
-#       allows us to vary operations applicable to an object (without changing it's class)
+#       variable: operations applicable to an object (without changing it's class)
 
 
 #   How Design Patterns solve Design Problems
@@ -138,11 +139,11 @@ import math
 #   Dynamic binding: (polymorphism) use of different objects supporting the same interface interchangeably, with the implementation to call being determined at runtime
 
 
-  
+
 #   Specifying object implementations:
 #   An objects implementation is defined by its class (which specifies representation, internal data, and operations)
 #   Objects are created by instantiating a class, creating an instance of that class.
- 
+
 #   OMT notation: 
 #   {{{
 #   (see pg 15)
@@ -206,7 +207,6 @@ test_AugmentedChild()
 #   [{A technique for making composition as powerful as inheritance}]
 #   A receiving object delegates operations to its delegate (as a subclass might defer requests to its parent class)
 #   The receiver passes itself to the delegate
-#
 #   Eg: A class `Window` uses (delegates) functionality to a `Rectangle` instance variable instead of inheriting from it:
 #   {{{
 #   (this design allows us to change the 'shape' of the window by changing the type of the member variable, instead of having to derive from a different shape)
@@ -241,39 +241,83 @@ test_Window_area()
 #   }}}
 
 
-#   Parameterized Types:
+#   Parameterized (Generic) Types: `vec<T>`
 #   (Templates) Use of a variable type parameter
 #   A powerful third alternative to class-inheritance/object-composition
 
 
-#   Relating runtime/compile-time structures
-#   [{aggregation vs acquaintance}]
-#   <>
+#   Relating runtime/compile-time structures: aggregation vs acquaintance
+#   The runtime structure of a program can vary wildly from it's code structure
+#       -   Aggregation: one object owns or is responsible for another
+#       -   Acquaintance: one object knows of another object
+#   The relationship between aggregation and acquaintance is defined by the rules of the language being used
+#   Composite and Decorator are patterns useful for building complex run-time structures.
+#   Observer runtime patterns are often hard to understand without knowing the pattern.
+#   Chain of Responsibility results in communication patterns that inheritance doesn't reveal.
 
 
-#   Designing for change:
-#   Common causes of redesign, with relevant Design Patterns
+#   Designing for change: Common causes of redesign, with relevant Design Patterns
+#   Good use of design patterns makes systems more robust to particular kinds of change.
+#
 #   1)  Creating an object by specifying a class explicitly: 
 #       Specifying a class name when creating an object commits one to a particular implementation instead of a particular interface. To avoid it, create objects indirectly. 
 #       See: Abstract Factory, Factory Method, Prototype
-#   2)  
+#
+#   2)  Dependence on specific operations:
+#       Specifying a particular operation commits to it. [{Avoid hard-coded requests}].
+#       See: Chain of Responsibility, Command
+#
+#   3)  Dependence on hardware and software:
+#       [{Design systems to limit platform dependencies}]
+#       See: Abstract Factory, Bridge
+#
+#   4)  Dependence on object representation/implementation
+#       [{Hiding implementation details from clients keeps changes from cascading}]
+#       See: Abstract Factory, Bridge, Memento, Proxy
+#
+#   5)  Algorithmic dependencies
+#       Isolate any algorithms that are likely to need to be changed.
+#       See: Builder, Iterator, Strategy, Template Method, Visitor
+#
+#   6)  Tight Coupling
+#       Loose coupling makes it easier to change individual classes, and increases their re-usability 
+#       See: Abstract Factory, Bridge, Chain of Responsibility, Command, Facade, Mediator, Observer
+#
+#   7)  Extending functionality through subclassing
+#       Subclassing often requires knowledge of the workings of the parent class, especially where methods need to be overridden. Composition can be a more flexible alternative - although it also adds complexity to designs that can make them harder to understand.
+#       See: Bridge, Chain of Responsibility, Composite, Decorator, Observer, Strategy
+#
+#   8)  Inability to alter classes continently
+#       Sometimes it is infeasible to change a class, either because it is part of a wider, more complicated design, or because the source code is not available. 
+#       See: Adapter, Decorator, Visitor
 
 
 #   Application programs, toolkits, and frameworks:
+#   Internal reuse, maintainability, and extension are generally high priorities, which design-patterns can facilitate. 
+#
+#   Toolkits: classes from libraries meant to provide useful functionality (the OO equivalent of a subroutine library).
+#   <>
+#
+#   Frameworks: a set of cooperating classes that make a reusable design for specific software.
 #   <>
 
 
 #   How to select a Design Pattern:
-#   <>
+#       1)  Consider how each design pattern solves design problems
+#       2)  Scan 'Intent' sections for each pattern
+#       3)  Study how patterns interrelate (see Figure 1.1, pg 12)
+#       4)  Study patterns of like purpose (pg 79)
+#       5)  Examine a case of redesign (pg 24)
+#       6)  Consider what should be variable in the design (see Table 1.2, or descriptions above)
 
 
 #   How to use a Design Pattern:
-#       1) Read the pattern once for an overview
-#       2) Study the 'Structure', 'Participants', and 'Collaborations' sections
-#       3) Look at the sample code section
-#       4) Chose names for the pattern participants that are meaningful in the application context
-#       5) Define the classes
-#       6) Define application-specific names for operations in the pattern
-#       7) Implement the operations to carry out the responsibilities and collaboration in the pattern
+#       1)  Read the pattern once for an overview
+#       2)  Study the 'Structure', 'Participants', and 'Collaborations' sections
+#       3)  Look at the sample code section
+#       4)  Chose names for the pattern participants that are meaningful in the application context
+#       5)  Define the classes
+#       6)  Define application-specific names for operations in the pattern
+#       7)  Implement the operations to carry out the responsibilities and collaboration in the pattern
 
 
