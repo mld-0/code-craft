@@ -23,6 +23,7 @@ design-patterns-tutorial-point
 2023-08-05T19:59:01AEST code-craft; design-patterns
 2023-08-27T22:49:43AEST code-craft; design-patterns; 03-creation-patterns; complete chapter
 2023-09-01T20:30:55AEST code-craft; design-patterns; 01-introduction; review ongoings
+2023-09-01T21:37:38AEST code-craft; design-patterns; 03-01-abstract-factory; MazeFactory example, review ongoings, cleanup
 
 extra:
 2023-08-09T19:21:07AEST code-craft; extra; solid-principes; code examples for each principle
