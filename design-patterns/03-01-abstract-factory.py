@@ -23,14 +23,13 @@
 #   <>
 
 #   Use the Abstract Factory pattern when:
-#       - A system should be independent of how its products are created, composed, and represented
-#       - A system should be configured with one of multiple families of products
-#       - [{We need to enforce constraints on how a family of related product objects are used together}]
-#       - Creating a library of products which reveal only their interfaces (not their implementations)
+#       -   A system should be independent of how its products are created, composed, and represented
+#       -   A system should be configured with one of multiple families of products
+#       -   [{We need to enforce constraints on how a family of related product objects are used together}]
+#       -   Creating a library of products which reveal only their interfaces (not their implementations)
 
 
 #   Structure:
-#   {{{
 class AbstractProductA:
     ...
 class ProductA1(AbstractProductA):
@@ -46,12 +45,14 @@ class ProductB2(AbstractProductB):
     ...
 
 class AbstractFactory:
+    """Declares an interface for operations for creating abstract Product objects"""
     def CreateProductA(self) -> AbstractProductA:
         raise NotImplementedError()
     def CreateProductB(self) -> AbstractProductB:
         raise NotImplementedError()
 
 class ConcreteFactory1(AbstractFactory):
+    """Implement the operations to create concrete Product objects"""
     def CreateProductA(self) -> ProductA1:
         return ProductA1()
     def CreateProductB(self) -> ProductB1:
@@ -63,18 +64,21 @@ class ConcreteFactory2(AbstractFactory):
     def CreateProductB(self) -> ProductB2:
         return ProductB2()
 
-def recieve_ProductA(p: AbstractProductA) -> None:
-    print(p)
+def client():
+    """ The client uses the interface defined by AbstractFactory and AbstractProduct
+        [{but (also) chooses which ConcreteFactory to inititate (and initiates typically only a single instance of it)}]"""
+    def recieve_ProductA(p: AbstractProductA) -> None:
+        print(p)
+    def recieve_ProductB(p: AbstractProductB) -> None:
+        print(p)
+    factory = ConcreteFactory1()
+    recieve_ProductA(factory.CreateProductA())
+    recieve_ProductB(factory.CreateProductB())
+    factory = ConcreteFactory2()
+    recieve_ProductA(factory.CreateProductA())
+    recieve_ProductB(factory.CreateProductB())
 
-def recieve_ProductB(p: AbstractProductB) -> None:
-    print(p)
-
-recieve_ProductA(ConcreteFactory1().CreateProductA())
-recieve_ProductA(ConcreteFactory2().CreateProductA())
-recieve_ProductB(ConcreteFactory1().CreateProductB())
-recieve_ProductB(ConcreteFactory2().CreateProductB())
-#   }}}
-
+client()
 
 #   [{Collaborations}]
 #   Normally, a single instance of ConcreteFactory is created at runtime
@@ -83,6 +87,7 @@ recieve_ProductB(ConcreteFactory2().CreateProductB())
 
 
 #   Consequences:
+#   <>
 #
 #   1)  Isolates concrete classes 
 #   Clients should write their interfaces in terms of AbstractProduct types, not the concrete implementation classes.

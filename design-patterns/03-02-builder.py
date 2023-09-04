@@ -29,7 +29,6 @@ from typing import List, Optional
 
 
 #   Structure:
-#   {{{
 class Product:
     """ Represents the object under construction
         Includes classes that define the constituent parts, 
@@ -105,7 +104,6 @@ def run_example():
     print(complex_example.to_string())
 run_example()
 
-#   }}}
 
 
 #   [{Collaborations}]
@@ -116,6 +114,7 @@ run_example()
 
 
 #   Consequences:
+#   <>
 #
 #   1)  Lets us vary a Product's internal representation
 #   <>
