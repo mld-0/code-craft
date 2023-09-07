@@ -6,3 +6,6 @@
 #   Toolkit:
 
 #   Framework:
+
+#   First class object: an entity that can be passed/returned from a function, assigned to a variable, and stored in a data structure in a given programming lanague
+
