@@ -27,6 +27,7 @@ design-patterns-tutorial-point
 2023-09-03T21:16:28AEST code-craft; design-patterns; 03-02-builder; MazeBuilder example, review ongoings, cleanup
 2023-09-04T21:56:34AEST code-craft; design-patterns; 03-03-factory-methods; CreateMaze example, review ongoings, cleanup.
 2023-09-07T22:03:50AEST code-craft; design-patterns; 03-04-prototype; MazePrototypeFactory example, implementing __deepcopy__, review ongoings, cleanup
+2023-09-08T21:56:00AEST code-craft; design-patterns; 03-05-singleton; complete chapter
 
 extra:
 2023-08-09T19:21:07AEST code-craft; extra; solid-principes; code examples for each principle
