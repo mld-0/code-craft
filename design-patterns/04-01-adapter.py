@@ -8,6 +8,7 @@
 #   2023-10-15T19:25:01AEDT Is the interface class `Target` really necessary for our example?
 #   2023-10-15T19:27:14AEDT For Object_Adapter ... doesn't requiring an instance of Adaptee to be passed to the ctor of Adapter defeat the purpose - shouldn't Adapter be responsible for creating the instance of Adaptee?
 #   2023-10-15T19:35:48AEDT related patterns - why is 'Proxy' included, what does it actually have to do with Adapter?
+#   2023-10-15T20:07:05AEDT example of Object Adapter and adapting multiple subclasses(?)
 #   }}}
 
 #   TODO: 2023-10-15T19:18:39AEDT reconcile gpt4 provided Class_Adapter / Object_Adapter interpretations from diagram with chapter example(?) (lookup notation used in said diagram?) (add notation reference to this folder?)
@@ -96,13 +97,42 @@ Object_Adapter()
 #   Consequences:
 #
 #   Class Adapter vs Object Adapter:
+#   Class Adapter:
+#       -   Adapter is a subclass of Adaptee
+#       -   Not suitable for adapting a class and all its subclasses
+#       -   Lets Adapter override some of Adaptee's behaviour
+#       -   [{Introduces only one object, requiring no pointer indirection to access Adaptee}]
+#   Object Adapter:
+#       -   [{Adaptee is a composite member variable of Adapter}]
+#       -   Allows a single Adapter to work with all the subclasses of Adaptee, to add functionality to them all at once
+#       -   Makes it harder to override Adaptee behaviour
+#
+#   Other issues:
+#
+#   1)  [{How much adapting does Adapter do?}]
 #   <>
 #   
-#   Other issues:
-#   <>
+#   2)  Adapter allows us to use existing classes without having to make assumptions about their interface
+#
+#   3)  Two-way Adapter
+#   [{a two-way class adapter which inherits multiple classes can be used in either system either class was originally from(?)}]
 
 
 #   Implementation:
+#
+#   1)  Public/private inheritance
+#   [{If Adapter inherits publicly from `Target` and privately from `Adaptee`, then Adapter 'is-a' `Target`, but only 'is-implemented-in-terms-of' `Adaptee` (and cannot publicly be used interchangeably with it as a subtype of it)]}
+#
+#   2)  Pluggable adapters
+#   Three ways to implement pluggable adapters:
+#   ( [{Choose the narrowest interface which provides the necessary adaptation - adapt as little as is actually necessary}] )
+#           a)  Using abstract operations:
+#           <>
+#           b)  Using delegate objects:
+#           <>
+#           c)  Parametrized adapters:
+#           <>
+#
 #   <>
 
 
